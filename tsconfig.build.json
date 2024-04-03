@@ -1,4 +1,7 @@
 {
     "extends": "./tsconfig.json",
-    "exclude": ["src/**/*.spec.ts", "src/**/*.mock.ts"]
+    "compilerOptions": {
+        "rootDir": "./src"
+    },
+    "exclude": ["jest.config.ts", "node_modules", "dist"]
 }
