@@ -9,5 +9,5 @@
         "skipLibCheck": true,
         "declaration": true
     },
-    "include": ["commitlint.config.js", "eslint.config.js", "src"]
+    "include": ["commitlint.config.js", "eslint.config.js", "**/*.ts"]
 }
