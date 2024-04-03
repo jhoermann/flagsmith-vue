@@ -3,5 +3,5 @@
     "compilerOptions": {
         "rootDir": "./src"
     },
-    "exclude": ["jest.config.ts", "node_modules", "dist"]
+    "exclude": ["jest.config.ts", "node_modules", "dist", "__tests__"]
 }
