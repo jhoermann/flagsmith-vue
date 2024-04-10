@@ -11,12 +11,11 @@ import type {
 import { computed, inject, provide, ref } from 'vue'
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
 
-interface FlagsmithHelper<F extends string = string, T extends string = string> {
+export interface FlagsmithHelper<F extends string = string, T extends string = string> {
     flags: Ref<IFlags<F> | undefined>
     traits: Ref<ITraits<T> | undefined>
     loadingState: Ref<LoadingState | undefined>
 }
-
 const FlagsmithInjectionKey: InjectionKey<FlagsmithHelper> = Symbol('FlagsmithInjectionKey')
 const injectHelper = (): FlagsmithHelper => {
     const helper = inject(FlagsmithInjectionKey)
@@ -31,7 +30,7 @@ const injectHelper = (): FlagsmithHelper => {
 export const useFlagsmith = <F extends string = string, T extends string = string>(
     options: IInitConfig<F, T>,
     flagsmithInstance = flagsmith
-): void => {
+): FlagsmithHelper<F, T> => {
     const flags = ref<IFlags>()
     const traits = ref<ITraits>()
     const loadingState = ref<LoadingState>()
@@ -51,6 +50,8 @@ export const useFlagsmith = <F extends string = string, T extends string = strin
         loadingState,
     }
     provide(FlagsmithInjectionKey, helper)
+
+    return helper
 }
 
 type ComputedObject<Key extends string, ComputedValue> = {
@@ -58,27 +59,31 @@ type ComputedObject<Key extends string, ComputedValue> = {
 }
 
 export const useFlags = <F extends string = string>(
-    flagsToUse: F[]
+    flagsToUse: F[],
+    flagsmithHelper?: FlagsmithHelper
 ): ComputedObject<F, IFlagsmithFeature | undefined> => {
-    const { flags } = injectHelper()
+    const { flags } = flagsmithHelper ?? injectHelper()
     return Object.fromEntries(
         flagsToUse.map((flag) => [flag, computed(() => flags.value?.[flag])])
     ) as ComputedObject<F, IFlagsmithFeature | undefined>
 }
 
 export const useTraits = <T extends string = string>(
-    traitsToUse: T[]
+    traitsToUse: T[],
+    flagsmithHelper?: FlagsmithHelper
 ): ComputedObject<T, IFlagsmithTrait | undefined> => {
-    const { traits } = injectHelper()
+    const { traits } = flagsmithHelper ?? injectHelper()
     return Object.fromEntries(
         traitsToUse.map((trait) => [trait, computed(() => traits.value?.[trait])])
     ) as ComputedObject<T, IFlagsmithTrait | undefined>
 }
 
-export const useFlagsmithLoading = (): {
+export const useFlagsmithLoading = (
+    flagsmithHelper?: FlagsmithHelper
+): {
     [K in keyof LoadingState]: ComputedRef<LoadingState[K]>
 } => {
-    const { loadingState } = injectHelper()
+    const { loadingState } = flagsmithHelper ?? injectHelper()
     return {
         error: computed(() => loadingState.value?.error ?? null),
         isFetching: computed(() => Boolean(loadingState.value?.isFetching)),
