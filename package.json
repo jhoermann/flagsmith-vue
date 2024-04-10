@@ -54,6 +54,6 @@
         "vue": "^2.7 || ^3"
     },
     "dependencies": {
-        "flagsmith": "^3.24.0"
+        "flagsmith": "^4.0.0"
     }
 }
