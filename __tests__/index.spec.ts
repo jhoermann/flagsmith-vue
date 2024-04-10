@@ -2,6 +2,7 @@ import { computed, defineComponent, nextTick } from 'vue'
 import { useFlags, useFlagsmith, useFlagsmithLoading, useTraits } from '../src/index'
 import { mount } from '@vue/test-utils'
 import flagsmith from 'flagsmith'
+import type { IFlagsmithFeature } from 'flagsmith/types'
 
 jest.mock('flagsmith')
 
@@ -26,7 +27,7 @@ const ChildComponent = defineComponent({
     },
 })
 
-const isVisibleFeatureMock = {
+const isVisibleFeatureMock: IFlagsmithFeature = {
     id: 1,
     enabled: true,
     value: true,
