@@ -14,7 +14,7 @@ export default tseslint.config(
         },
     },
     {
-        files: ['eslint.config.js'],
+        files: ['eslint.config.mjs'],
         rules: {
             '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-unsafe-member-access': 'off',

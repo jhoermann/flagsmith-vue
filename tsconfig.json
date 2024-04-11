@@ -1,9 +1,10 @@
 {
     "extends": ["@tsconfig/recommended/tsconfig.json", "@tsconfig/strictest/tsconfig.json"],
     "compilerOptions": {
+        "target": "es2019",
         "outDir": "dist",
         "checkJs": false,
         "declaration": true
     },
-    "include": ["commitlint.config.mjs", "eslint.config.js", "**/*.ts"]
+    "include": ["commitlint.config.mjs", "eslint.config.mjs", "**/*.ts"]
 }
