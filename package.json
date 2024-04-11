@@ -4,7 +4,6 @@
     "description": "Flagsmith Vue.js integration",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "type": "module",
     "scripts": {
         "build": "tsc --project tsconfig.build.json",
         "lint": "eslint .",
@@ -36,6 +35,7 @@
     "homepage": "https://github.com/jhoermann/flagsmith-vue#readme",
     "devDependencies": {
         "@commitlint/config-conventional": "^19.1.0",
+        "@tsconfig/recommended": "^1.0.6",
         "@tsconfig/strictest": "^2.0.5",
         "@types/jest": "^29.5.12",
         "@vue/test-utils": "^2.4.5",
