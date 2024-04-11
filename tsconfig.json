@@ -1,12 +1,9 @@
 {
-    "extends": "@tsconfig/strictest/tsconfig.json",
+    "extends": ["@tsconfig/recommended/tsconfig.json", "@tsconfig/strictest/tsconfig.json"],
     "compilerOptions": {
-        "target": "esnext",
-        "module": "esnext",
-        "moduleResolution": "bundler",
         "outDir": "dist",
         "checkJs": false,
         "declaration": true
     },
-    "include": ["commitlint.config.js", "eslint.config.js", "**/*.ts"]
+    "include": ["commitlint.config.mjs", "eslint.config.js", "**/*.ts"]
 }
