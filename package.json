@@ -25,6 +25,7 @@
     ],
     "keywords": [
         "flagsmith",
+        "feature flags",
         "vue"
     ],
     "author": "Jochen Hörmann",
