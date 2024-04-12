@@ -1,7 +1,14 @@
 {
-    "extends": ["@tsconfig/recommended/tsconfig.json", "@tsconfig/strictest/tsconfig.json"],
+    "extends": "@tsconfig/strictest/tsconfig.json",
     "compilerOptions": {
-        "target": "es2019",
+        // Copied from @tsconfig/recommended because of https://github.com/TypeStrong/ts-node/issues/1954
+        "target": "es2016",
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true,
+
         "outDir": "dist",
         "checkJs": false,
         "declaration": true
