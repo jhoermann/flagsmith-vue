@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/jhoermann/flagsmith-vue/compare/v1.0.0...v1.0.1) (2024-04-12)
+
+
+### Bug Fixes
+
+* **docs:** add compatible vue versions ([591af42](https://github.com/jhoermann/flagsmith-vue/commit/591af4294bc51dae74b73862ac10f734db08dbbc))
+
 ## 1.0.0 (2024-04-12)
 
 
