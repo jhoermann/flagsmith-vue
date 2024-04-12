@@ -1,0 +1,25 @@
+name: Codacy Coverage Reporter
+
+on: ['push']
+
+jobs:
+    codacy-coverage-reporter:
+        runs-on: ubuntu-latest
+        name: codacy-coverage-reporter
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20.x'
+                  registry-url: 'https://registry.npmjs.org'
+            - name: Install dependencies
+              run: npm ci
+            - name: Generage coverage report
+              run: npm run test:coverage
+            - name: Run codacy-coverage-reporter
+              uses: codacy/codacy-coverage-reporter-action@v1
+              with:
+                  project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+                  coverage-reports: coverage/lcov.info
