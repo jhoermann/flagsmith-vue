@@ -17,11 +17,11 @@ export interface FlagsmithHelper<F extends string = string, T extends string = s
     loadingState: Ref<LoadingState | undefined>
 }
 const FlagsmithInjectionKey: InjectionKey<FlagsmithHelper> = Symbol('FlagsmithInjectionKey')
-const injectHelper = (): FlagsmithHelper => {
-    const helper = inject(FlagsmithInjectionKey)
+const injectHelper = (flagsmithHelper?: FlagsmithHelper): FlagsmithHelper => {
+    const helper = flagsmithHelper ?? inject(FlagsmithInjectionKey)
 
     if (helper === undefined) {
-        throw new TypeError(`Flagsmith vue: Injected helper should not be undefined.`)
+        throw new TypeError(`Flagsmith vue: Helper should not be undefined.`)
     }
 
     return helper
@@ -62,7 +62,7 @@ export const useFlags = <F extends string = string>(
     flagsToUse: F[],
     flagsmithHelper?: FlagsmithHelper
 ): ComputedObject<F, IFlagsmithFeature | undefined> => {
-    const { flags } = flagsmithHelper ?? injectHelper()
+    const { flags } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
         flagsToUse.map((flag) => [flag, computed(() => flags.value?.[flag])])
     ) as ComputedObject<F, IFlagsmithFeature | undefined>
@@ -72,7 +72,7 @@ export const useTraits = <T extends string = string>(
     traitsToUse: T[],
     flagsmithHelper?: FlagsmithHelper
 ): ComputedObject<T, IFlagsmithTrait | undefined> => {
-    const { traits } = flagsmithHelper ?? injectHelper()
+    const { traits } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
         traitsToUse.map((trait) => [trait, computed(() => traits.value?.[trait])])
     ) as ComputedObject<T, IFlagsmithTrait | undefined>
@@ -83,7 +83,7 @@ export const useFlagsmithLoading = (
 ): {
     [K in keyof LoadingState]: ComputedRef<LoadingState[K]>
 } => {
-    const { loadingState } = flagsmithHelper ?? injectHelper()
+    const { loadingState } = injectHelper(flagsmithHelper)
     return {
         error: computed(() => loadingState.value?.error ?? null),
         isFetching: computed(() => Boolean(loadingState.value?.isFetching)),
