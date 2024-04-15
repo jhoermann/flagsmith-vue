@@ -120,4 +120,34 @@ describe('flagsmith-vue', () => {
             expect(() => wrapper.get('.child-component--loading')).toThrow()
         })
     })
+
+    describe('Provide and inject helper', () => {
+        it('should throw error when trying to inject in the same component', () => {
+            const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation()
+            const errorComponent = defineComponent({
+                template: '<div />',
+                setup() {
+                    useFlagsmith({
+                        environmentID: '',
+                    })
+                    useFlags(['test_flag'])
+                },
+            })
+            expect(() => mount(errorComponent)).toThrow()
+            consoleWarnMock.mockRestore()
+        })
+
+        it('should not throw error when trying to inject in the same component and helper is provided', () => {
+            const correctComponent = defineComponent({
+                template: '<div />',
+                setup() {
+                    const helper = useFlagsmith({
+                        environmentID: '',
+                    })
+                    useFlags(['test_flag'], helper)
+                },
+            })
+            expect(() => mount(correctComponent)).not.toThrow()
+        })
+    })
 })
