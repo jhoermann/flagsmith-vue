@@ -13,17 +13,31 @@ const ChildComponent = defineComponent({
         <div v-if="isVisible"
             class="child-component--feature">
         </div>
+        <div v-if="error"
+            class="child-component--error">
+        </div>
+        <div v-if="isFetching"
+            class="child-component--fetching">
+        </div>
         <div v-if="isLoading"
             class="child-component--loading">
+            Source: {{ source }}
         </div>
     </div>`,
     setup() {
         const { is_visible: isVisibleFeature } = useFlags(['is_visible'])
         const isVisible = computed(() => isVisibleFeature.value?.value)
         const { test_trait: testTrait } = useTraits(['test_trait'])
-        const { isLoading } = useFlagsmithLoading()
+        const { error, isFetching, isLoading, source } = useFlagsmithLoading()
 
-        return { isVisible, testTrait, isLoading }
+        return {
+            isVisible,
+            testTrait,
+            error,
+            isFetching,
+            isLoading,
+            source,
+        }
     },
 })
 
@@ -100,24 +114,89 @@ describe('flagsmith-vue', () => {
     })
 
     describe('Loading status', () => {
-        it('should display the loading element when flagsmith is loading', async () => {
-            jest.mocked(flagsmith.loadingState!).isLoading = true
-            const wrapper = mountParentComponent()
-
-            flagsmith._triggerLoadingState!()
-            await nextTick()
-
-            expect(() => wrapper.get('.child-component--loading')).not.toThrow()
+        const originalLoadingState = flagsmith.loadingState!
+        beforeEach(() => {
+            flagsmith.loadingState = { ...originalLoadingState }
         })
 
-        it('should not display the loading element when flagsmith is not loading', async () => {
-            jest.mocked(flagsmith.loadingState!).isLoading = false
-            const wrapper = mountParentComponent()
+        describe('error', () => {
+            it('should display the error element when there is a flagsmith error', async () => {
+                flagsmith.loadingState!.error = new Error('Test error')
+                const wrapper = mountParentComponent()
 
-            flagsmith._triggerLoadingState!()
-            await nextTick()
+                flagsmith._triggerLoadingState!()
+                await nextTick()
 
-            expect(() => wrapper.get('.child-component--loading')).toThrow()
+                expect(() => wrapper.get('.child-component--error')).not.toThrow()
+            })
+
+            it('should not display the error element when there is no flagsmith error', async () => {
+                const wrapper = mountParentComponent()
+
+                flagsmith._triggerLoadingState!()
+                await nextTick()
+
+                expect(() => wrapper.get('.child-component--error')).toThrow()
+            })
+        })
+
+        describe('isFetching', () => {
+            it('should display the fetching element when flagsmith is fetching', async () => {
+                flagsmith.loadingState!.isFetching = true
+                const wrapper = mountParentComponent()
+
+                flagsmith._triggerLoadingState!()
+                await nextTick()
+
+                expect(() => wrapper.get('.child-component--fetching')).not.toThrow()
+            })
+
+            it('should not display the fetching element when flagsmith is not fetching', async () => {
+                flagsmith.loadingState!.isFetching = false
+                const wrapper = mountParentComponent()
+
+                flagsmith._triggerLoadingState!()
+                await nextTick()
+
+                expect(() => wrapper.get('.child-component--fetching')).toThrow()
+            })
+        })
+
+        describe('isLoading', () => {
+            it('should display the loading element when flagsmith is loading', async () => {
+                flagsmith.loadingState!.isLoading = true
+                const wrapper = mountParentComponent()
+
+                flagsmith._triggerLoadingState!()
+                await nextTick()
+
+                expect(() => wrapper.get('.child-component--loading')).not.toThrow()
+            })
+
+            it('should not display the loading element when flagsmith is not loading', async () => {
+                flagsmith.loadingState!.isLoading = false
+                const wrapper = mountParentComponent()
+
+                flagsmith._triggerLoadingState!()
+                await nextTick()
+
+                expect(() => wrapper.get('.child-component--loading')).toThrow()
+            })
+        })
+
+        describe('Loading source', () => {
+            it('should display the loading source when flagsmith is loading', async () => {
+                flagsmith.loadingState!.isLoading = true
+                const wrapper = mountParentComponent()
+
+                flagsmith._triggerLoadingState!()
+                await nextTick()
+
+                const loadingElement = wrapper.get('.child-component--loading')
+                expect(loadingElement.text().trim()).toBe(
+                    `Source: ${flagsmith.loadingState!.source}`
+                )
+            })
         })
     })
 
