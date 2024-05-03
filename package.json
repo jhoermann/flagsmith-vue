@@ -7,7 +7,7 @@
     "scripts": {
         "watch": "tsc --watch",
         "build": "tsc --project tsconfig.build.json && npm run minify",
-        "minify": "terser dist/index.js -o dist/index.js",
+        "minify": "terser dist/index.js -o dist/index.js --ecma 2016",
         "lint": "eslint .",
         "format": "prettier . --write",
         "test": "jest",
