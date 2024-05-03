@@ -5,7 +5,9 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsc --project tsconfig.build.json",
+        "watch": "tsc --watch",
+        "build": "tsc --project tsconfig.build.json && npm run minify",
+        "minify": "terser dist/index.js -o dist/index.js",
         "lint": "eslint .",
         "format": "prettier . --write",
         "test": "jest",
@@ -45,6 +47,7 @@
         "jest-environment-jsdom": "^29.7.0",
         "lint-staged": "^15.2.2",
         "prettier": "3.2.5",
+        "terser": "^5.31.0",
         "ts-jest": "^29.1.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5",
