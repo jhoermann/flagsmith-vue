@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.1.0...v1.2.0) (2024-05-06)
+
+
+### Features
+
+* **build:** add minification ([d7eea77](https://github.com/jhoermann/flagsmith-vue/commit/d7eea77321c00ee347be38d5d7c2317cec5aea81))
+
 ## [1.1.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.0.1...v1.1.0) (2024-04-30)
 
 
