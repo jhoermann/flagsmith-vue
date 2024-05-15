@@ -51,7 +51,7 @@
         "ts-jest": "^29.1.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5",
-        "typescript-eslint": "^7.8.0",
+        "typescript-eslint": "^7.9.0",
         "vue": "^3.4.27"
     },
     "peerDependencies": {
