@@ -52,7 +52,7 @@
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5",
         "typescript-eslint": "^7.13.0",
-        "vue": "^3.4.28"
+        "vue": "^3.4.29"
     },
     "peerDependencies": {
         "vue": "^2.7 || ^3"
