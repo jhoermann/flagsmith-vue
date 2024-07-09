@@ -1,10 +1,21 @@
 import { computed, defineComponent, nextTick } from 'vue'
-import { useFlags, useFlagsmith, useFlagsmithLoading, useTraits } from '../src/index'
+import {
+    useFlags,
+    useFlagsmith,
+    useFlagsmithInstance,
+    useFlagsmithLoading,
+    useTraits,
+} from '../src/index'
 import { mount } from '@vue/test-utils'
 import flagsmith from 'flagsmith'
 import type { IFlagsmithFeature } from 'flagsmith/types'
 
 jest.mock('flagsmith')
+jest.mocked(flagsmith.getState).mockReturnValue({
+    api: 'mock-api',
+    environmentID: 'mock-id',
+    traits: {},
+})
 
 const ChildComponent = defineComponent({
     template: `
@@ -23,12 +34,16 @@ const ChildComponent = defineComponent({
             class="child-component--loading">
             Source: {{ source }}
         </div>
+        <div class="child-component--state">
+            State API: {{ getState().api }}
+        </div>
     </div>`,
     setup() {
         const { is_visible: isVisibleFeature } = useFlags(['is_visible'])
         const isVisible = computed(() => isVisibleFeature.value?.value)
         const { test_trait: testTrait } = useTraits(['test_trait'])
         const { error, isFetching, isLoading, source } = useFlagsmithLoading()
+        const { getState } = useFlagsmithInstance()
 
         return {
             isVisible,
@@ -37,6 +52,7 @@ const ChildComponent = defineComponent({
             isFetching,
             isLoading,
             source,
+            getState,
         }
     },
 })
@@ -197,6 +213,17 @@ describe('flagsmith-vue', () => {
                     `Source: ${flagsmith.loadingState!.source}`
                 )
             })
+        })
+    })
+
+    describe('Instance', () => {
+        it('should display the instance state', async () => {
+            const wrapper = mountParentComponent()
+
+            flagsmith._triggerLoadingState!()
+            await nextTick()
+
+            expect(wrapper.get('.child-component--state').text()).toBe('State API: mock-api')
         })
     })
 
