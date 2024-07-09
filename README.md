@@ -33,7 +33,7 @@ useFlagsmith(options)
 
 For `options` see [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
 
-Then you can access the flags, traits and loading status inside your child components:
+Then you can access the flags, traits, loading status and the Flagsmith instance itself inside your child components:
 
 ```ts
 import { useFlags, useTraits, useFlagsmithLoading } from 'flagsmith-vue'
@@ -41,6 +41,7 @@ import { useFlags, useTraits, useFlagsmithLoading } from 'flagsmith-vue'
 const flags = useFlags(['flag1', 'flag2', ...])
 const traits = useTraits(['trait1', 'trait2', ...])
 const flagsmithLoading = useFlagsmithLoading()
+const { setTraits } = useFlagsmithInstance()
 ```
 
 ## License

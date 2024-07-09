@@ -7,6 +7,7 @@ import type {
     ITraits,
     LoadingState,
     FlagSource,
+    IFlagsmith,
 } from 'flagsmith/types'
 import { computed, inject, provide, ref } from 'vue'
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
@@ -15,6 +16,7 @@ export interface FlagsmithHelper<F extends string = string, T extends string = s
     flags: Ref<IFlags<F> | undefined>
     traits: Ref<ITraits<T> | undefined>
     loadingState: Ref<LoadingState | undefined>
+    flagsmithInstance: IFlagsmith<F, T>
 }
 const FlagsmithInjectionKey: InjectionKey<FlagsmithHelper> = Symbol('FlagsmithInjectionKey')
 const injectHelper = <F extends string = string, T extends string = string>(
@@ -50,6 +52,7 @@ export const useFlagsmith = <F extends string = string, T extends string = strin
         flags,
         traits,
         loadingState,
+        flagsmithInstance,
     }
     provide(FlagsmithInjectionKey, helper)
 
@@ -92,4 +95,11 @@ export const useFlagsmithLoading = <F extends string = string, T extends string 
         isLoading: computed(() => Boolean(loadingState.value?.isLoading)),
         source: computed(() => loadingState.value?.source ?? ('NONE' as FlagSource)),
     }
+}
+
+export const useFlagsmithInstance = <F extends string = string, T extends string = string>(
+    flagsmithHelper?: FlagsmithHelper<F, T>
+): IFlagsmith<F, T> => {
+    const { flagsmithInstance } = injectHelper(flagsmithHelper)
+    return flagsmithInstance
 }
