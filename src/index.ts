@@ -17,7 +17,9 @@ export interface FlagsmithHelper<F extends string = string, T extends string = s
     loadingState: Ref<LoadingState | undefined>
 }
 const FlagsmithInjectionKey: InjectionKey<FlagsmithHelper> = Symbol('FlagsmithInjectionKey')
-const injectHelper = (flagsmithHelper?: FlagsmithHelper): FlagsmithHelper => {
+const injectHelper = <F extends string = string, T extends string = string>(
+    flagsmithHelper?: FlagsmithHelper<F, T>
+): FlagsmithHelper<F, T> => {
     const helper = flagsmithHelper ?? inject(FlagsmithInjectionKey)
 
     if (helper === undefined) {
@@ -58,9 +60,9 @@ type ComputedObject<Key extends string, ComputedValue> = {
     [K in Key]: ComputedRef<ComputedValue>
 }
 
-export const useFlags = <F extends string = string>(
+export const useFlags = <F extends string = string, T extends string = string>(
     flagsToUse: F[],
-    flagsmithHelper?: FlagsmithHelper
+    flagsmithHelper?: FlagsmithHelper<F, T>
 ): ComputedObject<F, IFlagsmithFeature | undefined> => {
     const { flags } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
@@ -68,9 +70,9 @@ export const useFlags = <F extends string = string>(
     ) as ComputedObject<F, IFlagsmithFeature | undefined>
 }
 
-export const useTraits = <T extends string = string>(
+export const useTraits = <F extends string = string, T extends string = string>(
     traitsToUse: T[],
-    flagsmithHelper?: FlagsmithHelper
+    flagsmithHelper?: FlagsmithHelper<F, T>
 ): ComputedObject<T, IFlagsmithTrait | undefined> => {
     const { traits } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
@@ -78,8 +80,8 @@ export const useTraits = <T extends string = string>(
     ) as ComputedObject<T, IFlagsmithTrait | undefined>
 }
 
-export const useFlagsmithLoading = (
-    flagsmithHelper?: FlagsmithHelper
+export const useFlagsmithLoading = <F extends string = string, T extends string = string>(
+    flagsmithHelper?: FlagsmithHelper<F, T>
 ): {
     [K in keyof LoadingState]: ComputedRef<LoadingState[K]>
 } => {
