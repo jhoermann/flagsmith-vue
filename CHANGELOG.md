@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.4.0...v1.5.0) (2024-07-10)
+
+
+### Features
+
+* allow accessing Flagsmith instance ([e2fb1f5](https://github.com/jhoermann/flagsmith-vue/commit/e2fb1f538af48abd1294a688d409046a1be17ea7))
+* make useFlags/useTraits/useFlagsmithLoading fully generic ([44396c9](https://github.com/jhoermann/flagsmith-vue/commit/44396c9098495e9aa055c0cdf3df34bb2bd9fe9d))
+
 ## [1.4.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.3.0...v1.4.0) (2024-07-04)
 
 
