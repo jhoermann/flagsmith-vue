@@ -2,14 +2,16 @@
 
 > An (unofficial) [Flagsmith](https://www.flagsmith.com) Vue.js integration that uses [Vue Composition API](https://vuejs.org/guide/extras/composition-api-faq.html) to dynamically update feature flags and traits in components. Compatible with Vue.js versions `2.7` and `3`.
 
-[![npm][badge-npm]][npm] [![GitHub][badge-github]][github] [![GitHub tests workflow][badge-actions]][actions] [![Codacy Code Quality][badge-codacy]][codacy] [![Codacy Coverage][badge-coverage]][codacy]
+[![npm][badge-npm]][npm] [![jsr][badge-jsr]] [![GitHub][badge-github]][github] [![GitHub tests workflow][badge-actions]][actions] [![Codacy Code Quality][badge-codacy]][codacy] [![Codacy Coverage][badge-coverage]][codacy]
 
 [npm]: https://www.npmjs.com/package/flagsmith-vue
+[jsr]: https://jsr.io/@jhoermann/flagsmith-vue
 [github]: https://github.com/jhoermann/flagsmith-vue
 [actions]: https://github.com/jhoermann/flagsmith-vue/actions/workflows/tests.yml?query=branch%3Amain
 [codacy]: https://app.codacy.com/gh/jhoermann/flagsmith-vue/dashboard
 
 [badge-npm]: https://img.shields.io/npm/v/flagsmith-vue?logo=npm&logoColor=white&color=red
+[badge-jsr]: https://jsr.io/badges/@jhoermann/flagsmith-vue
 [badge-github]: https://img.shields.io/github/package-json/v/jhoermann/flagsmith-vue?logo=github&color=blue
 [badge-actions]: https://img.shields.io/github/actions/workflow/status/jhoermann/flagsmith-vue/tests.yml?logo=github&label=Tests
 [badge-codacy]: https://img.shields.io/codacy/grade/27a356f30e97429e9c8c0b865e41240a?logo=codacy
@@ -17,8 +19,18 @@
 
 ## Installation
 
+### NPM registry
+
 ```bash
+# use any of npm, yarn or pnpm
 npm install flagsmith-vue
+```
+
+### JSR registry
+
+```bash
+# use any of npx, yarn dlx or pnpm dlx
+npx jsr add @jhoermann/flagsmith-vue
 ```
 
 ## Usage
