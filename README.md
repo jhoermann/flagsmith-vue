@@ -2,7 +2,7 @@
 
 > An (unofficial) [Flagsmith](https://www.flagsmith.com) Vue.js integration that uses [Vue Composition API](https://vuejs.org/guide/extras/composition-api-faq.html) to dynamically update feature flags and traits in components. Compatible with Vue.js versions `2.7` and `3`.
 
-[![npm][badge-npm]][npm] [![jsr][badge-jsr]] [![GitHub][badge-github]][github] [![GitHub tests workflow][badge-actions]][actions] [![Codacy Code Quality][badge-codacy]][codacy] [![Codacy Coverage][badge-coverage]][codacy]
+[![npm][badge-npm]][npm] [![jsr][badge-jsr]][jsr] [![GitHub][badge-github]][github] [![GitHub tests workflow][badge-actions]][actions] [![Codacy Code Quality][badge-codacy]][codacy] [![Codacy Coverage][badge-coverage]][codacy]
 
 [npm]: https://www.npmjs.com/package/flagsmith-vue
 [jsr]: https://jsr.io/@jhoermann/flagsmith-vue
