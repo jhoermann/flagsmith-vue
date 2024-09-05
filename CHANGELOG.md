@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.5.0...v1.6.0) (2024-09-05)
+
+
+### Features
+
+* **deps:** bump flagsmith from 4.0.3 to 4.1.0 ([23292ef](https://github.com/jhoermann/flagsmith-vue/commit/23292ef1aaa2db140b3e68e8b170c236f246fc24))
+
 ## [1.5.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.4.0...v1.5.0) (2024-07-10)
 
 
