@@ -9,7 +9,10 @@ export default tseslint.config(
     {
         languageOptions: {
             parserOptions: {
-                project: true,
+                projectService: {
+                    allowDefaultProject: ['commitlint.config.mjs', 'eslint.config.mjs'],
+                    defaultProject: './tsconfig.json',
+                },
             },
         },
     },
@@ -20,5 +23,5 @@ export default tseslint.config(
             '@typescript-eslint/no-unsafe-member-access': 'off',
         },
     },
-    { ignores: ['**/*.json', 'node_modules', 'dist'] }
+    { ignores: ['coverage', '**/*.json', 'node_modules', 'dist'] }
 )
