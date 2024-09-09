@@ -13,5 +13,5 @@
         "checkJs": false,
         "declaration": true
     },
-    "include": ["commitlint.config.mjs", "eslint.config.mjs", "**/*.ts"]
+    "include": ["**/*.ts"]
 }
