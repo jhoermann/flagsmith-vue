@@ -13,8 +13,6 @@ import type { IFlagsmithFeature } from 'flagsmith/types'
 jest.mock('flagsmith')
 jest.mocked(flagsmith.getState).mockReturnValue({
     api: 'mock-api',
-    environmentID: 'mock-id',
-    traits: {},
 })
 
 const ChildComponent = defineComponent({
