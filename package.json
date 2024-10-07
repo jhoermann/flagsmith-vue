@@ -55,9 +55,7 @@
         "vue": "^3.5.11"
     },
     "peerDependencies": {
+        "flagsmith": "^5",
         "vue": "^2.7 || ^3"
-    },
-    "dependencies": {
-        "flagsmith": "^4.1.0"
     }
 }
