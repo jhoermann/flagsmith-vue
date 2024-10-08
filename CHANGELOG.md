@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.6.0...v2.0.0) (2024-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* include flagsmith as peer dependency
+
+### Features
+
+* include flagsmith as peer dependency ([c9cd98a](https://github.com/jhoermann/flagsmith-vue/commit/c9cd98a5f0d72e796500501406739fa9580aae10))
+
 ## [1.6.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.5.0...v1.6.0) (2024-09-05)
 
 
