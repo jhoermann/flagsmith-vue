@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.0.0...v2.1.0) (2024-10-17)
+
+
+### Features
+
+* **deps:** update flagsmith to v7 ([125720d](https://github.com/jhoermann/flagsmith-vue/commit/125720d9ec09e9011c454f4b7f883962e922f26d))
+
 ## [2.0.0](https://github.com/jhoermann/flagsmith-vue/compare/v1.6.0...v2.0.0) (2024-10-08)
 
 
