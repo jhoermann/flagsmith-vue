@@ -47,4 +47,4 @@ const { setTraits } = useFlagsmithInstance()
 ## License
 
 Unless otherwise noted, all source code is licensed under the MIT License.  
-Copyright (c) 2024 Jochen Hörmann
+Copyright (c) 2025 Jochen Hörmann
