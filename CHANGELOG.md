@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.1.0...v2.2.0) (2025-01-10)
+
+
+### Features
+
+* **deps:** update flagsmith to version 8 ([475d60c](https://github.com/jhoermann/flagsmith-vue/commit/475d60c61a4ec6c355004c934d6256b8224e5816))
+
 ## [2.1.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.0.0...v2.1.0) (2024-10-17)
 
 
