@@ -2,16 +2,19 @@
     "name": "flagsmith-vue",
     "version": "2.2.0",
     "description": "Flagsmith Vue.js integration",
+    "type": "module",
     "exports": {
-        "types": "./build/types/index.d.ts",
-        "require": "./build/cjs/index.js",
-        "import": "./build/esm/index.js",
-        "default": "./build/esm/index.js"
+        "types": "./dist/index.d.ts",
+        "require": "./dist/cjs/index.cjs",
+        "import": "./dist/esm/index.js",
+        "default": "./dist/esm/index.js"
     },
     "scripts": {
         "watch": "tsc --watch",
-        "build": "tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && tsc -p tsconfig.types.json && npm run minify",
+        "build": "tsc -p tsconfig.esm.json & tsc -p tsconfig.cjs.json & tsc -p tsconfig.types.json",
         "minify": "terser dist/cjs/index.js -o dist/cjs/index.js --ecma 2016 && terser dist/esm/index.js -o dist/esm/index.js --ecma 2016",
+        "rename-cjs": "mv dist/cjs/index.js dist/cjs/index.cjs",
+        "prerelease": "npm run build && npm run minify && npm run rename-cjs",
         "lint": "eslint .",
         "format": "prettier . --write",
         "test": "jest",
