@@ -18,8 +18,8 @@ jobs:
                   registry-url: 'https://registry.npmjs.org'
             - name: Install dependencies
               run: npm ci
-            - name: Build
-              run: npm run build
+            - name: Prerelease
+              run: npm run prerelease
             - name: Publish package
               run: npm publish --provenance
               env:

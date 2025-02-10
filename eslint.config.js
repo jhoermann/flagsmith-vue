@@ -10,14 +10,14 @@ export default tseslint.config(
         languageOptions: {
             parserOptions: {
                 projectService: {
-                    allowDefaultProject: ['commitlint.config.mjs', 'eslint.config.mjs'],
+                    allowDefaultProject: ['commitlint.config.js', 'eslint.config.js'],
                     defaultProject: './tsconfig.json',
                 },
             },
         },
     },
     {
-        files: ['eslint.config.mjs'],
+        files: ['eslint.config.js'],
         rules: {
             '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-unsafe-member-access': 'off',
