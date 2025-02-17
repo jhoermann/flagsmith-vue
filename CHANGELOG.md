@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.2.0...v2.3.0) (2025-02-17)
+
+
+### Features
+
+* **deps:** update flagsmith to version 9 ([3fb5727](https://github.com/jhoermann/flagsmith-vue/commit/3fb5727735b4b0b82df933e9713e37d443d82111))
+* include export as esm module ([61e7e29](https://github.com/jhoermann/flagsmith-vue/commit/61e7e292c29173bee4e9931b1919c1282335e2d4))
+
 ## [2.2.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.1.0...v2.2.0) (2025-01-10)
 
 
