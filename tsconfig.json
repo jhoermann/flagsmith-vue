@@ -2,15 +2,12 @@
     "$schema": "https://json.schemastore.org/tsconfig.json",
     "extends": "@tsconfig/strictest/tsconfig.json",
     "compilerOptions": {
-        // Copied from @tsconfig/recommended because of https://github.com/TypeStrong/ts-node/issues/1954
         "target": "es2016",
-        "module": "commonjs",
+        "moduleResolution": "node",
         "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
         "strict": true,
+        "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
-
-        "outDir": "dist",
         "checkJs": false
     },
     "include": ["**/*.ts"]
