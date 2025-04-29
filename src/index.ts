@@ -3,26 +3,29 @@ import type {
     IFlags,
     IFlagsmithFeature,
     IFlagsmithTrait,
-    IInitConfig,
     ITraits,
     LoadingState,
     FlagSource,
     IFlagsmith,
+    IInitConfig,
 } from 'flagsmith/types'
 import { computed, inject, provide, ref } from 'vue'
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
 
-export interface FlagsmithHelper<F extends string = string, T extends string = string> {
-    flags: Ref<IFlags<F> | undefined>
+export interface FlagsmithHelper<
+    F extends string | Record<string, any> = string,
+    T extends string = string,
+> {
+    flags: Ref<IFlags<F extends Record<string, any> ? keyof F : F> | undefined>
     traits: Ref<ITraits<T> | undefined>
     loadingState: Ref<LoadingState | undefined>
     flagsmithInstance: IFlagsmith<F, T>
 }
 const FlagsmithInjectionKey: InjectionKey<FlagsmithHelper> = Symbol('FlagsmithInjectionKey')
-const injectHelper = <F extends string = string, T extends string = string>(
+const injectHelper = <F extends string | Record<string, any> = string, T extends string = string>(
     flagsmithHelper?: FlagsmithHelper<F, T>
 ): FlagsmithHelper<F, T> => {
-    const helper = flagsmithHelper ?? inject(FlagsmithInjectionKey)
+    const helper = flagsmithHelper ?? inject<FlagsmithHelper<F, T>>(FlagsmithInjectionKey)
 
     if (helper === undefined) {
         throw new TypeError(`Flagsmith vue: Helper should not be undefined.`)
@@ -31,30 +34,33 @@ const injectHelper = <F extends string = string, T extends string = string>(
     return helper
 }
 
-export const useFlagsmith = <F extends string = string, T extends string = string>(
+export const useFlagsmith = <
+    F extends string | Record<string, any> = string,
+    T extends string = string,
+>(
     options: IInitConfig<F, T>,
-    flagsmithInstance = flagsmith
+    flagsmithInstance = flagsmith as unknown as IFlagsmith<F, T>
 ): FlagsmithHelper<F, T> => {
-    const flags = ref<IFlags>()
-    const traits = ref<ITraits>()
+    const flags = ref<IFlags<F>>()
+    const traits = ref<ITraits<T>>()
     const loadingState = ref<LoadingState>()
 
     void flagsmithInstance.init(options)
     flagsmithInstance._trigger = () => {
         flags.value = flagsmithInstance.getAllFlags()
-        traits.value = flagsmithInstance.getAllTraits()
+        traits.value = flagsmithInstance.getAllTraits() as ITraits<T>
     }
     flagsmithInstance._triggerLoadingState = () => {
         loadingState.value = flagsmithInstance.loadingState
     }
 
-    const helper: FlagsmithHelper = {
+    const helper: FlagsmithHelper<F, T> = {
         flags,
         traits,
         loadingState,
         flagsmithInstance,
     }
-    provide(FlagsmithInjectionKey, helper)
+    provide<FlagsmithHelper<F, T>>(FlagsmithInjectionKey, helper)
 
     return helper
 }
@@ -63,10 +69,13 @@ type ComputedObject<Key extends string, ComputedValue> = {
     [K in Key]: ComputedRef<ComputedValue>
 }
 
-export const useFlags = <F extends string = string, T extends string = string>(
+export const useFlags = <
+    F extends string | Record<string, any> = string,
+    T extends string = string,
+>(
     flagsToUse: F[],
     flagsmithHelper?: FlagsmithHelper<F, T>
-): ComputedObject<F, IFlagsmithFeature | undefined> => {
+): ComputedObject<F | keyof F, IFlagsmithFeature | undefined> => {
     const { flags } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
         flagsToUse.map((flag) => [flag, computed(() => flags.value?.[flag])])
