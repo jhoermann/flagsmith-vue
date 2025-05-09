@@ -12,17 +12,18 @@ import type {
 import { computed, inject, provide, ref } from 'vue'
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
 
-export interface FlagsmithHelper<
-    F extends string | Record<string, any> = string,
-    T extends string = string,
-> {
-    flags: Ref<IFlags<F extends Record<string, any> ? keyof F : F> | undefined>
+type FKey<F> = F extends string ? F : keyof F
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- typing comes from flagsmith
+type Flag = string | Record<string, any>
+export interface FlagsmithHelper<F extends Flag = string, T extends string = string> {
+    flags: Ref<IFlags<FKey<F>> | undefined>
     traits: Ref<ITraits<T> | undefined>
     loadingState: Ref<LoadingState | undefined>
     flagsmithInstance: IFlagsmith<F, T>
 }
+
 const FlagsmithInjectionKey: InjectionKey<FlagsmithHelper> = Symbol('FlagsmithInjectionKey')
-const injectHelper = <F extends string | Record<string, any> = string, T extends string = string>(
+const injectHelper = <F extends Flag = string, T extends string = string>(
     flagsmithHelper?: FlagsmithHelper<F, T>
 ): FlagsmithHelper<F, T> => {
     const helper = flagsmithHelper ?? inject<FlagsmithHelper<F, T>>(FlagsmithInjectionKey)
@@ -34,14 +35,11 @@ const injectHelper = <F extends string | Record<string, any> = string, T extends
     return helper
 }
 
-export const useFlagsmith = <
-    F extends string | Record<string, any> = string,
-    T extends string = string,
->(
-    options: IInitConfig<F, T>,
+export const useFlagsmith = <F extends Flag = string, T extends string = string>(
+    options: IInitConfig<FKey<F>, T>,
     flagsmithInstance = flagsmith as unknown as IFlagsmith<F, T>
 ): FlagsmithHelper<F, T> => {
-    const flags = ref<IFlags<F>>()
+    const flags = ref<IFlags<FKey<F>>>()
     const traits = ref<ITraits<T>>()
     const loadingState = ref<LoadingState>()
 
@@ -69,17 +67,14 @@ type ComputedObject<Key extends string, ComputedValue> = {
     [K in Key]: ComputedRef<ComputedValue>
 }
 
-export const useFlags = <
-    F extends string | Record<string, any> = string,
-    T extends string = string,
->(
-    flagsToUse: F[],
+export const useFlags = <F extends Flag = string, T extends string = string>(
+    flagsToUse: FKey<F>[],
     flagsmithHelper?: FlagsmithHelper<F, T>
-): ComputedObject<F | keyof F, IFlagsmithFeature | undefined> => {
+): ComputedObject<FKey<F>, IFlagsmithFeature | undefined> => {
     const { flags } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
         flagsToUse.map((flag) => [flag, computed(() => flags.value?.[flag])])
-    ) as ComputedObject<F, IFlagsmithFeature | undefined>
+    ) as ComputedObject<FKey<F>, IFlagsmithFeature | undefined>
 }
 
 export const useTraits = <F extends string = string, T extends string = string>(
