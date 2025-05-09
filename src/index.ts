@@ -12,9 +12,13 @@ import type {
 import { computed, inject, provide, ref } from 'vue'
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
 
-type FKey<F> = F extends string ? F : keyof F
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- typing comes from flagsmith
 type Flag = string | Record<string, any>
+type FKey<F> = F extends string ? F : keyof F
+type FlagFeature<F extends Flag> = F extends string
+    ? IFlagsmithFeature
+    : IFlagsmithFeature<F[keyof F]>
+
 export interface FlagsmithHelper<F extends Flag = string, T extends string = string> {
     flags: Ref<IFlags<FKey<F>> | undefined>
     traits: Ref<ITraits<T> | undefined>
@@ -70,14 +74,14 @@ type ComputedObject<Key extends string, ComputedValue> = {
 export const useFlags = <F extends Flag = string, T extends string = string>(
     flagsToUse: FKey<F>[],
     flagsmithHelper?: FlagsmithHelper<F, T>
-): ComputedObject<FKey<F>, IFlagsmithFeature | undefined> => {
+): ComputedObject<FKey<F>, FlagFeature<F> | undefined> => {
     const { flags } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
         flagsToUse.map((flag) => [flag, computed(() => flags.value?.[flag])])
-    ) as ComputedObject<FKey<F>, IFlagsmithFeature | undefined>
+    ) as ComputedObject<FKey<F>, FlagFeature<F> | undefined>
 }
 
-export const useTraits = <F extends string = string, T extends string = string>(
+export const useTraits = <F extends Flag = string, T extends string = string>(
     traitsToUse: T[],
     flagsmithHelper?: FlagsmithHelper<F, T>
 ): ComputedObject<T, IFlagsmithTrait | undefined> => {
@@ -87,7 +91,7 @@ export const useTraits = <F extends string = string, T extends string = string>(
     ) as ComputedObject<T, IFlagsmithTrait | undefined>
 }
 
-export const useFlagsmithLoading = <F extends string = string, T extends string = string>(
+export const useFlagsmithLoading = <F extends Flag = string, T extends string = string>(
     flagsmithHelper?: FlagsmithHelper<F, T>
 ): {
     [K in keyof LoadingState]: ComputedRef<LoadingState[K]>
@@ -101,7 +105,7 @@ export const useFlagsmithLoading = <F extends string = string, T extends string 
     }
 }
 
-export const useFlagsmithInstance = <F extends string = string, T extends string = string>(
+export const useFlagsmithInstance = <F extends Flag = string, T extends string = string>(
     flagsmithHelper?: FlagsmithHelper<F, T>
 ): IFlagsmith<F, T> => {
     const { flagsmithInstance } = injectHelper(flagsmithHelper)
