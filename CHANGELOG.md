@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.3.0...v2.4.0) (2025-05-09)
+
+
+### Features
+
+* **types:** update flag type to align with flagsmith ([97926e7](https://github.com/jhoermann/flagsmith-vue/commit/97926e7e555ac4f96f330dd203612cce76c44e39))
+
 ## [2.3.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.2.0...v2.3.0) (2025-02-17)
 
 
