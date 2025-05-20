@@ -15,7 +15,7 @@ import type { ComputedRef, InjectionKey, Ref } from 'vue'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- typing comes from flagsmith
 type Flag = string | Record<string, any>
 type FKey<F> = F extends string ? F : keyof F
-type FlagFeature<F extends Flag> = F extends string
+type FlagFeature<F extends Flag> = [F] extends [string]
     ? IFlagsmithFeature
     : IFlagsmithFeature<F[keyof F]>
 
