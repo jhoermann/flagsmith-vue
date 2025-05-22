@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/jhoermann/flagsmith-vue/compare/v2.4.0...v2.4.1) (2025-05-22)
+
+
+### Bug Fixes
+
+* **types:** union type issue in useFlags ([8e4792c](https://github.com/jhoermann/flagsmith-vue/commit/8e4792cb371f8cbff002360743572e4c8c91a174))
+
 ## [2.4.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.3.0...v2.4.0) (2025-05-09)
 
 
