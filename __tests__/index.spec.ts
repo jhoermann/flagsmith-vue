@@ -37,7 +37,7 @@ const ChildComponent = defineComponent({
         </div>
     </div>`,
     setup() {
-        const { is_visible: isVisibleFeature } = useFlags<{ is_visible: boolean }>(['is_visible'])
+        const { is_visible: isVisibleFeature } = useFlags(['is_visible'])
         const isVisible = computed(() => isVisibleFeature.value?.value)
         const { test_trait: testTrait } = useTraits(['test_trait'])
         const { error, isFetching, isLoading, source } = useFlagsmithLoading()
