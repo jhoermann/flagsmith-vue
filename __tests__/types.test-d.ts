@@ -22,9 +22,9 @@ expectTypeOf(isTestFeatureNonSpecific?.value?.value).toEqualTypeOf<
 >()
 
 // test: should set the flag value type to the flag interface value type when flag is an interface
-const { is_visible: isVisibleFeatureBoolean, is_test: isTestFeatureBoolean } = useFlags<{
+const { is_visible: isVisibleFeatureBoolean, is_test: isTestFeatureString } = useFlags<{
     is_visible: boolean
-    is_test: boolean
+    is_test: string
 }>(['is_visible', 'is_test'], {
     flags: ref<IFlags>(),
     traits: ref<ITraits>(),
@@ -32,5 +32,5 @@ const { is_visible: isVisibleFeatureBoolean, is_test: isTestFeatureBoolean } = u
     flagsmithInstance: flagsmith,
 })
 
-expectTypeOf(isVisibleFeatureBoolean?.value?.value).toEqualTypeOf<boolean | undefined>()
-expectTypeOf(isTestFeatureBoolean?.value?.value).toEqualTypeOf<boolean | undefined>()
+expectTypeOf(isVisibleFeatureBoolean.value?.value).toEqualTypeOf<boolean | undefined>()
+expectTypeOf(isTestFeatureString.value?.value).toEqualTypeOf<string | undefined>()
