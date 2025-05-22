@@ -15,9 +15,13 @@ import type { ComputedRef, InjectionKey, Ref } from 'vue'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- typing comes from flagsmith
 type Flag = string | Record<string, any>
 type FKey<F> = F extends string ? F : keyof F
-type FlagFeature<F extends Flag> = [F] extends [string]
-    ? IFlagsmithFeature
-    : IFlagsmithFeature<F[keyof F]>
+type UseFlagsReturn<F extends Flag> = [F] extends [string]
+    ? {
+          [K in F]: ComputedRef<IFlagsmithFeature | undefined>
+      }
+    : {
+          [K in keyof F]: ComputedRef<IFlagsmithFeature<F[K]> | undefined>
+      }
 
 export interface FlagsmithHelper<F extends Flag = string, T extends string = string> {
     flags: Ref<IFlags<FKey<F>> | undefined>
@@ -74,11 +78,11 @@ type ComputedObject<Key extends string, ComputedValue> = {
 export const useFlags = <F extends Flag = string, T extends string = string>(
     flagsToUse: FKey<F>[],
     flagsmithHelper?: FlagsmithHelper<F, T>
-): ComputedObject<FKey<F>, FlagFeature<F> | undefined> => {
+): UseFlagsReturn<F> => {
     const { flags } = injectHelper(flagsmithHelper)
     return Object.fromEntries(
         flagsToUse.map((flag) => [flag, computed(() => flags.value?.[flag])])
-    ) as ComputedObject<FKey<F>, FlagFeature<F> | undefined>
+    ) as UseFlagsReturn<F>
 }
 
 export const useTraits = <F extends Flag = string, T extends string = string>(
