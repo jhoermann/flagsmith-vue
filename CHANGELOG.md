@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/jhoermann/flagsmith-vue/compare/v2.4.1...v2.4.2) (2025-05-22)
+
+
+### Bug Fixes
+
+* **types:** multiple flag types ([b229af2](https://github.com/jhoermann/flagsmith-vue/commit/b229af2d71b6214d9f8250b48dad21824129cb48))
+
 ## [2.4.1](https://github.com/jhoermann/flagsmith-vue/compare/v2.4.0...v2.4.1) (2025-05-22)
 
 
