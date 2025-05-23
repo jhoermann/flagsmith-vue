@@ -21,168 +21,176 @@
 npm install flagsmith-vue flagsmith
 ```
 
-## Usage
+## API and Usage
+
+This section details the API and usage for each of the composable functions provided by `flagsmith-vue`.
 
 ### `useFlagsmith`
 
-The `useFlagsmith` composable initializes the Flagsmith integration. It is crucial to call this function **once** in your root or main application component (e.g., `App.vue`) during the application's setup phase.
+The `useFlagsmith` composable initializes the Flagsmith integration. It is crucial to call this function **once** in your root or main application component (e.g., `App.vue`) during the application's setup phase. This function sets up the necessary context for other composables to access Flagsmith data.
 
-```typescript
-import { useFlagsmith } from 'flagsmith-vue';
+*   **Parameters**:
+    *   `options: IInitConfig`: (Required) The configuration options for initializing the Flagsmith client. This object includes your `environmentID` and other settings. For a detailed list of all available options, refer to the [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
+    *   `flagsmithInstance?: IFlagsmith`: (Optional) An existing Flagsmith JavaScript SDK instance. If you have a specific need to use a pre-configured instance, you can pass it here. Otherwise, the composable will create a new instance.
 
-// In your root/parent component setup (e.g., App.vue)
-useFlagsmith({
-  environmentID: 'YOUR_ENVIRONMENT_ID',
-  // Additional options...
-});
-```
+*   **Return Value**:
+    *   Type: `FlagsmithHelper`
+    *   Description: Returns a `FlagsmithHelper` object which contains:
+        *   `flags: Ref<IFlags | undefined>`: A Vue `ref` to the object containing all feature flags.
+        *   `traits: Ref<ITraits | undefined>`: A Vue `ref` to the object containing all user traits.
+        *   `loadingState: Ref<LoadingState | undefined>`: A Vue `ref` to an object representing the SDK's loading status.
+        *   `flagsmithInstance: IFlagsmith`: The direct instance of the Flagsmith JavaScript SDK. This is **not** a Vue `ref`.
 
-For the full list of `options` you can pass during initialization, please refer to the official [Flagsmith JavaScript Client SDK documentation on initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
+*   **Usage Example**:
 
-Once initialized, you can use the other composables (`useFlags`, `useTraits`, `useFlagsmithLoading`, `useFlagsmithInstance`) in any of your child components.
+    ```typescript
+    // In your root/parent component setup (e.g., App.vue)
+    import { useFlagsmith } from 'flagsmith-vue';
+
+    useFlagsmith({
+      environmentID: 'YOUR_ENVIRONMENT_ID',
+      // enableAnalytics: true, // Example of another option
+      // ... other initialization options
+    });
+    ```
+    Once `useFlagsmith` is initialized in your root component, you can use the other composables (`useFlags`, `useTraits`, `useFlagsmithLoading`, `useFlagsmithInstance`) in any of your child components.
 
 ### `useFlags`
 
-The `useFlags` composable is used to access specific feature flags within your components. You provide it with an array of flag names you're interested in.
+The `useFlags` composable is used to access specific feature flags within your components. You provide it with an array of flag names you're interested in, and it returns reactive computed properties for those flags.
 
-```typescript
-import { useFlags } from 'flagsmith-vue';
+*   **Parameters**:
+    *   `flagsToUse: FKey<F>[]`: (Required) An array of flag names (strings) that you want to retrieve from Flagsmith.
+    *   `flagsmithHelper?: FlagsmithHelper<F, T>`: (Optional) An optional `FlagsmithHelper` instance. If not provided, the globally available helper (initialized by `useFlagsmith` in your root component) is automatically used.
 
-// In your component setup
-const flags = useFlags(['my_feature_flag', 'another_flag']);
+*   **Return Value**:
+    *   Type: `Object` where each key is a flag name from `flagsToUse`.
+    *   Description: Returns an object where each key corresponds to a flag name you requested. The value for each key is a Vue `ComputedRef<IFlagsmithFeature | undefined>`. This `ComputedRef` holds the flag object itself (or `undefined` if the flag doesn't exist or hasn't been loaded yet).
+    *   To access specific properties of the flag, such as its `enabled` status or remote config `value`, you need to use `.value` on the `ComputedRef` (e.g., `flags.my_feature_flag.value?.enabled`).
 
-// You can then access the flags in your template or script:
-// Check if a feature is enabled:
-// if (flags.my_feature_flag.value?.enabled) { /* ... */ }
+*   **Usage Example**:
 
-// Get a remote config value:
-// const configValue = flags.another_flag.value?.value;
-```
+    ```typescript
+    // In your component setup
+    import { useFlags } from 'flagsmith-vue';
 
-This composable returns an object where each key is a flag name from your input array. The value for each key is a Vue `ComputedRef` that holds the flag object itself (or `undefined` if the flag doesn't exist or hasn't been loaded yet). The actual flag data, such as its `enabled` status or its remote config `value`, is available on the `.value` property of this `ComputedRef`. For example, to check if `my_feature_flag` is enabled, you would use `flags.my_feature_flag.value?.enabled`.
+    const flags = useFlags(['my_feature_flag', 'another_flag_with_config']);
+
+    // Example: Check if a feature is enabled
+    // if (flags.my_feature_flag.value?.enabled) {
+    //   console.log('My feature is enabled!');
+    // }
+
+    // Example: Get a remote config value
+    // const configValue = flags.another_flag_with_config.value?.value;
+    // if (configValue) {
+    //   console.log('Remote config value:', configValue);
+    // }
+    ```
 
 ### `useTraits`
 
-The `useTraits` composable allows you to access specific user traits that have been set for the current user. Similar to `useFlags`, you pass it an array of trait names.
+The `useTraits` composable allows you to access specific user traits that have been set for the current user. Similar to `useFlags`, you provide an array of trait names, and it returns reactive computed properties for those traits.
 
-```typescript
-import { useTraits } from 'flagsmith-vue';
+*   **Parameters**:
+    *   `traitsToUse: T[]`: (Required) An array of trait names (strings) that you want to retrieve.
+    *   `flagsmithHelper?: FlagsmithHelper<F, T>`: (Optional) An optional `FlagsmithHelper` instance. If not provided, the globally available helper is used.
 
-// In your component setup
-const traits = useTraits(['user_role', 'beta_tester']);
+*   **Return Value**:
+    *   Type: `Object` where each key is a trait name from `traitsToUse`.
+    *   Description: Returns an object where each key corresponds to a trait name you requested. The value for each key is a Vue `ComputedRef<IFlagsmithTrait | undefined>`. This `ComputedRef` holds the trait object (or `undefined` if the trait doesn't exist or hasn't been loaded).
+    *   To access the actual value of the trait, you need to use `.value` on the `ComputedRef` (e.g., `traits.user_role.value?.value`).
 
-// Access trait values:
-// const userRole = traits.user_role.value?.value;
-// const isBetaTester = traits.beta_tester.value?.value;
-```
+*   **Usage Example**:
 
-This composable returns an object where each key is a trait name. The value for each key is a Vue `ComputedRef` holding the trait object (or `undefined` if the trait doesn't exist or hasn't been loaded). The trait's actual value is available on the `.value` property of this `ComputedRef` (e.g., `traits.user_role.value?.value`).
+    ```typescript
+    // In your component setup
+    import { useTraits } from 'flagsmith-vue';
+
+    const traits = useTraits(['user_role', 'beta_tester_status']);
+
+    // Example: Access trait values
+    // const userRole = traits.user_role.value?.value;
+    // if (userRole === 'admin') {
+    //   console.log('User is an admin.');
+    // }
+
+    // const isBetaTester = traits.beta_tester_status.value?.value;
+    // if (isBetaTester) {
+    //   console.log('User is a beta tester.');
+    // }
+    ```
 
 ### `useFlagsmithLoading`
 
-The `useFlagsmithLoading` composable provides detailed status information about the Flagsmith SDK's loading and fetching state. This is useful for building responsive UIs that react to these states (e.g., showing loading indicators or error messages).
+The `useFlagsmithLoading` composable provides detailed reactive status information about the Flagsmith SDK's loading and fetching states. This is useful for building responsive UIs that react to these states (e.g., showing loading indicators or error messages).
 
-```typescript
-import { useFlagsmithLoading } from 'flagsmith-vue';
+*   **Parameters**:
+    *   `flagsmithHelper?: FlagsmithHelper<F, T>`: (Optional) An optional `FlagsmithHelper` instance. If not provided, the globally available helper is used.
 
-// In your component setup
-const { isLoading, isFetching, error, source } = useFlagsmithLoading();
+*   **Return Value**:
+    *   Type: `Object`
+    *   Description: Returns an object containing the following Vue `ComputedRef`s:
+        *   `error: ComputedRef<Error | null>`: Holds an error object if an error occurred during the SDK's initialization or while fetching updates. It will be `null` if there's no error.
+        *   `isFetching: ComputedRef<boolean>`: A boolean `ComputedRef` that is `true` when the SDK is actively fetching flags or traits from the server (e.g., after an `identify` call or a real-time update).
+        *   `isLoading: ComputedRef<boolean>`: A boolean `ComputedRef` that is `true` during the initial loading process when the SDK is first initializing and fetching data.
+        *   `source: ComputedRef<FlagSource>`: A `ComputedRef<FlagSource>` indicating the source of the current flag data. Possible values include `'SERVER'`, `'CACHE'`, `'DEFAULT_FLAGS'`, or `'NONE'`. This can be useful for debugging or understanding how the flags were loaded.
 
-// Example usage in your template:
-// <div v-if="isLoading.value">Loading flags...</div>
-// <div v-if="isFetching.value">Updating flags...</div>
-// <div v-if="error.value">Error: {{ error.value.message }}</div>
-// <p>Flags loaded from: {{ source.value }}</p>
-```
+*   **Usage Example**:
 
-The composable returns an object with the following properties, all of which are Vue `ComputedRef`s:
+    ```typescript
+    // In your component setup
+    import { useFlagsmithLoading } from 'flagsmith-vue';
 
-*   `error`: A `ComputedRef` that holds any error object if an error occurred during the SDK's initialization or while fetching updates. It will be `null` if there's no error.
-*   `isFetching`: A boolean `ComputedRef` that is `true` when the SDK is actively fetching flags or traits from the server (e.g., after an `identify` call or a real-time update).
-*   `isLoading`: A boolean `ComputedRef` that is `true` during the initial loading process when the SDK is first initializing and fetching data.
-*   `source`: A `ComputedRef<FlagSource>` indicating the source of the current flag data. Possible values include `'SERVER'`, `'CACHE'`, `'DEFAULT_FLAGS'`, or `'NONE'`. This can be useful for debugging or understanding how the flags were loaded.
+    const { isLoading, isFetching, error, source } = useFlagsmithLoading();
+
+    // Example usage in your template:
+    // <div v-if="isLoading.value">Loading initial flags...</div>
+    // <div v-if="isFetching.value">Updating flags in the background...</div>
+    // <div v-if="error.value">An error occurred: {{ error.value.message }}</div>
+    // <p>Flags loaded from: {{ source.value }}</p>
+    ```
 
 ### `useFlagsmithInstance`
 
 The `useFlagsmithInstance` composable provides direct access to the underlying Flagsmith JavaScript SDK instance. This is useful for more advanced scenarios where you might need to call methods directly on the SDK, such as identifying users, manually setting traits, or using other functionalities not exposed by the other composables.
 
-```typescript
-import { useFlagsmithInstance } from 'flagsmith-vue';
-
-// In your component setup
-const flagsmithInstance = useFlagsmithInstance();
-
-function identifyUserAndSetTrait(userId: string, traitKey: string, traitValue: any) {
-  // The flagsmithInstance is directly usable.
-  flagsmithInstance.identify(userId);
-  flagsmithInstance.setTrait(traitKey, traitValue);
-  // Alternatively, to set multiple traits at once:
-  // flagsmithInstance.setTraits({ [traitKey]: traitValue, another_trait: 'another_value' });
-
-  // For anonymous users, you might just set traits without identifying:
-  // flagsmithInstance.setTraits({ example_trait: traitValue });
-}
-```
-
-The `useFlagsmithInstance` composable returns the Flagsmith JavaScript SDK instance directly. Since `useFlagsmith` (which should be called in your root component) initializes and provides this instance, and `useFlagsmithInstance` injects it, the instance should generally be available. You can rely on TypeScript's type system or perform a simple check if necessary, but you do not need to access it via `.value`.
-
-For the complete list of available methods and functionalities on the Flagsmith instance, please refer to the official [Flagsmith JavaScript Client SDK documentation](https://docs.flagsmith.com/clients/javascript).
-
-## Composable Functions API
-
-This section details the API for each of the composable functions provided by `flagsmith-vue`.
-
-### `useFlagsmith`
-
-Initializes the Flagsmith integration and provides a helper object for interacting with the SDK.
-
 *   **Parameters**:
-    *   `options: IInitConfig`: The configuration options for initializing the Flagsmith client. See [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options) for detailed information.
-    *   `flagsmithInstance?: IFlagsmith` (optional): An optional existing Flagsmith JavaScript SDK instance. If not provided, a new instance will be created.
+    *   `flagsmithHelper?: FlagsmithHelper<F, T>`: (Optional) An optional `FlagsmithHelper` instance. If not provided, the globally available helper is used.
+
 *   **Return Value**:
-    *   Returns a `FlagsmithHelper` object. This object contains reactive Vue `ref`s for `flags`, `traits`, and `loadingState`. The `flagsmithInstance` property within this helper object is the direct Flagsmith SDK instance (not a `ref`).
+    *   Type: `IFlagsmith`
+    *   Description: Returns the direct `IFlagsmith` SDK instance. Since `useFlagsmith` (which should be called in your root component) initializes and provides this instance, and `useFlagsmithInstance` injects it, the instance should generally be available. You can rely on TypeScript's type system or perform a simple check if necessary.
 
-### `useFlags`
+*   **Usage Example**:
 
-Accesses specified feature flags and provides them as reactive Vue `ComputedRef`s.
+    ```typescript
+    // In your component setup
+    import { useFlagsmithInstance } from 'flagsmith-vue';
 
-*   **Parameters**:
-    *   `flagsToUse: FKey<F>[]`: An array of flag names (strings) to retrieve.
-    *   `flagsmithHelper?: FlagsmithHelper<F, T>` (optional): An optional `FlagsmithHelper` instance. If not provided, the globally available helper (initialized by `useFlagsmith`) is used.
-*   **Return Value**:
-    *   Returns an object where each key is a flag name from the `flagsToUse` array. The corresponding value is a Vue `ComputedRef<IFlagsmithFeature | undefined>`. This `ComputedRef` holds the flag object itself (or `undefined` if not found/loaded). To access specific properties of the flag, such as its `enabled` status or remote config `value`, you would use `.value` on the `ComputedRef` (e.g., `flags.my_flag.value?.enabled`).
+    const flagsmithInstance = useFlagsmithInstance();
 
-### `useTraits`
+    async function identifyUserAndSetCustomTrait(userId: string, traitKey: string, traitValue: any) {
+      try {
+        // The flagsmithInstance is directly usable.
+        await flagsmithInstance.identify(userId); // Ensure identify completes if you need to wait for it
+        await flagsmithInstance.setTrait(traitKey, traitValue);
+        console.log(`Trait '${traitKey}' set for user '${userId}'.`);
 
-Accesses specified user traits and provides them as reactive Vue `ComputedRef`s.
+        // Example of setting multiple traits at once:
+        // await flagsmithInstance.setTraits({ another_trait: 'another_value', user_segment: 'A' });
 
-*   **Parameters**:
-    *   `traitsToUse: T[]`: An array of trait names (strings) to retrieve.
-    *   `flagsmithHelper?: FlagsmithHelper<F, T>` (optional): An optional `FlagsmithHelper` instance. If not provided, the globally available helper is used.
-*   **Return Value**:
-    *   Returns an object where each key is a trait name from the `traitsToUse` array. The corresponding value is a Vue `ComputedRef<IFlagsmithTrait | undefined>`. This `ComputedRef` holds the trait object itself (or `undefined` if not found/loaded). To access the actual value of the trait, you would use `.value` on the `ComputedRef` (e.g., `traits.my_trait.value?.value`).
+        // For anonymous users, you might just set traits without explicitly identifying:
+        // await flagsmithInstance.setTraits({ example_anonymous_trait: traitValue });
+      } catch (error) {
+        console.error('Flagsmith API error:', error);
+      }
+    }
 
-### `useFlagsmithLoading`
-
-Provides detailed reactive status information about the Flagsmith SDK's loading and fetching states.
-
-*   **Parameters**:
-    *   `flagsmithHelper?: FlagsmithHelper<F, T>` (optional): An optional `FlagsmithHelper` instance. If not provided, the globally available helper is used.
-*   **Return Value**:
-    *   Returns an object containing the following Vue `ComputedRef`s:
-        *   `error: ComputedRef<Error | null>`: Holds an error object if an error occurred, otherwise `null`.
-        *   `isFetching: ComputedRef<boolean>`: `true` if the SDK is currently fetching data.
-        *   `isLoading: ComputedRef<boolean>`: `true` if the SDK is performing its initial load.
-        *   `source: ComputedRef<FlagSource>`: Indicates the source of the flag data (e.g., `'SERVER'`, `'CACHE'`).
-
-### `useFlagsmithInstance`
-
-Provides direct access to the underlying Flagsmith JavaScript SDK instance.
-
-*   **Parameters**:
-    *   `flagsmithHelper?: FlagsmithHelper<F, T>` (optional): An optional `FlagsmithHelper` instance. If not provided, the globally available helper is used.
-*   **Return Value**:
-    *   Returns the direct `IFlagsmith` SDK instance, allowing direct interaction with the Flagsmith JavaScript SDK.
+    // Call this function when appropriate in your component logic
+    // identifyUserAndSetCustomTrait('unique_user_id_123', 'custom_user_property', 'property_value');
+    ```
+    For the complete list of available methods and functionalities on the Flagsmith instance, please refer to the official [Flagsmith JavaScript Client SDK documentation](https://docs.flagsmith.com/clients/javascript).
 
 ## License
 
