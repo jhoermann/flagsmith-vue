@@ -21,7 +21,7 @@
 npm install flagsmith-vue flagsmith
 ```
 
-## Quick Start
+## Usage
 
 Get started quickly with `flagsmith-vue`:
 
@@ -53,7 +53,7 @@ const flags = useFlags(['my_feature', 'feature_with_value']);
 // const configValue = flags.feature_with_value.value?.value;
 ```
 
-## Detailed API Reference
+## API Reference
 
 This section provides a concise reference for each composable function.
 
