@@ -21,7 +21,94 @@
 npm install flagsmith-vue flagsmith
 ```
 
-## API and Usage
+## Quick Start
+
+This section provides a quick way to get `flagsmith-vue` integrated into your Vue application.
+
+**Step 1: Initialize Flagsmith in your main application component**
+
+First, you need to initialize the Flagsmith client using the `useFlagsmith` composable. This is typically done once in your root Vue component (e.g., `App.vue`) or in your `main.ts` file if you are providing it at the application level.
+
+```typescript
+// App.vue (or your main application component)
+import { defineComponent } from 'vue';
+import { useFlagsmith } from 'flagsmith-vue';
+
+export default defineComponent({
+  name: 'App',
+  setup() {
+    useFlagsmith({
+      environmentID: 'YOUR_ENVIRONMENT_ID', // Replace with your actual Environment ID
+      // Optional: Add other Flagsmith initialization options here
+      // cacheFlags: true,
+      // enableAnalytics: true,
+    });
+
+    // ... rest of your App setup
+    return {}; // Ensure setup returns an object if not using <script setup>
+  },
+});
+```
+Remember to replace `'YOUR_ENVIRONMENT_ID'` with your actual Flagsmith Environment ID. You can find this in your Flagsmith project settings.
+
+**Step 2: Access Feature Flags in your components**
+
+Once Flagsmith is initialized, you can access your feature flags in any child component using the `useFlags` composable.
+
+```typescript
+// MyComponent.vue (any component in your application)
+import { defineComponent } from 'vue';
+import { useFlags } from 'flagsmith-vue';
+
+export default defineComponent({
+  name: 'MyComponent',
+  setup() {
+    // Request the flags you need for this component
+    const flags = useFlags(['hero_banner_enabled', 'show_new_feature_button']);
+
+    // You can then use the flags in your component's template or logic.
+    //
+    // To check if a flag is enabled:
+    // const isHeroBannerEnabled = flags.hero_banner_enabled.value?.enabled;
+    //
+    // To get a remote config value (if the flag has one):
+    // const buttonText = flags.show_new_feature_button.value?.value || 'Default Text';
+
+    return {
+      flags, // Expose the reactive flags object to the template
+      // Example of exposing a specific computed property for convenience:
+      // isHeroBannerEnabled: computed(() => flags.hero_banner_enabled.value?.enabled),
+      // buttonText: computed(() => flags.show_new_feature_button.value?.value || 'Default Text'),
+    };
+  },
+  // Example template usage (if not using <script setup>):
+  // template: `
+  //   <div>
+  //     <div v-if="flags.hero_banner_enabled.value?.enabled">
+  //       <!-- Hero Banner Content Here -->
+  //       <p>Hero Banner is ON!</p>
+  //     </div>
+  //     <button v-if="flags.show_new_feature_button.value?.enabled">
+  //       {{ flags.show_new_feature_button.value?.value || 'New Feature' }}
+  //     </button>
+  //   </div>
+  // `
+});
+```
+In the example above:
+- `flags.hero_banner_enabled.value?.enabled` checks if the `hero_banner_enabled` feature flag is turned on.
+- `flags.show_new_feature_button.value?.value` retrieves the remote configuration value associated with the `show_new_feature_button` flag. If the flag has no value or is disabled, it falls back to `'Default Text'` (or `'New Feature'` in the template example).
+
+**Further Steps**
+
+This quick start covers the basics of initializing Flagsmith and accessing feature flags. For more advanced features, such as:
+- Managing user identity and traits with `useTraits`
+- Monitoring the SDK's loading status with `useFlagsmithLoading`
+- Directly interacting with the Flagsmith SDK instance using `useFlagsmithInstance`
+
+Please refer to the detailed "Detailed API Reference" section that follows.
+
+## Detailed API Reference
 
 This section details the API and usage for each of the composable functions provided by `flagsmith-vue`.
 
