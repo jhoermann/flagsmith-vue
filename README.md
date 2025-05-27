@@ -23,26 +23,133 @@ npm install flagsmith-vue flagsmith
 
 ## Usage
 
-Initialize the integration with the `useFlagsmith` helper in your root/parent component:
+**Step 1: Initialize Flagsmith (`useFlagsmith`)**
 
-```ts
+In your main app component (e.g., `App.vue`), initialize Flagsmith. Replace `YOUR_ENVIRONMENT_ID` with your actual ID. For more init options, see [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
+
+```typescript
+// App.vue (using <script setup>) or main.ts
 import { useFlagsmith } from 'flagsmith-vue'
 
-useFlagsmith(options)
+useFlagsmith({ environmentID: 'YOUR_ENVIRONMENT_ID' })
 ```
 
-For `options` see [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
+**Step 2: Access Feature Flags (`useFlags`)**
 
-Then you can access the flags, traits, loading status and the Flagsmith instance itself inside your child components:
+In any child component, use `useFlags` to get your flags. Access `yourFlag.value?.enabled` for enabled status and `yourFlag.value?.value` for the flag's value.
 
-```ts
-import { useFlags, useTraits, useFlagsmithLoading } from 'flagsmith-vue'
+```typescript
+// MyComponent.vue (using <script setup>)
+import { useFlags } from 'flagsmith-vue'
 
-const flags = useFlags(['flag1', 'flag2', ...])
-const traits = useTraits(['trait1', 'trait2', ...])
-const flagsmithLoading = useFlagsmithLoading()
-const { setTraits } = useFlagsmithInstance()
+const flags = useFlags(['my_feature', 'feature_with_value'])
+
+// Check if a flag is enabled:
+// if (flags.my_feature.value?.enabled) { /* ... */ }
+
+// Get a remote config value:
+// const configValue = flags.feature_with_value.value?.value;
 ```
+
+## API Reference
+
+<details>
+<summary><code>useFlagsmith</code></summary>
+
+Initializes the Flagsmith integration. Call once in your root component (e.g., `App.vue`).
+
+- **Parameters**:
+    - `options: IInitConfig` (Required): Flagsmith client initialization options (see [Flagsmith docs](https://docs.flagsmith.com/clients/javascript#initialisation-options)).
+    - `flagsmithInstance?: IFlagsmith` (Optional): An existing Flagsmith SDK instance.
+- **Returns**: `FlagsmithHelper` - An object containing:
+    - `flags: Ref<IFlags | undefined>` - Reactive flags object.
+    - `traits: Ref<ITraits | undefined>` - Reactive traits object.
+    - `loadingState: Ref<LoadingState | undefined>` - Reactive SDK loading status.
+    - `flagsmithInstance: IFlagsmith` - Direct Flagsmith SDK instance.
+- **Usage Example**:
+    ```typescript
+    import { useFlagsmith } from 'flagsmith-vue'
+    useFlagsmith({ environmentID: 'YOUR_ENVIRONMENT_ID' })
+    ```
+
+</details>
+
+<details>
+<summary><code>useFlags</code></summary>
+
+Accesses specified feature flags reactively.
+
+- **Parameters**:
+    - `flagsToUse: FKey<F>[]` (Required): Array of flag names to retrieve.
+    - `flagsmithHelper?: FlagsmithHelper<F, T>` (Optional): `FlagsmithHelper` instance (uses global if not provided).
+- **Returns**: `Object` - Keys are flag names, values are `ComputedRef<IFlagsmithFeature | undefined>`. Access flag properties via `.value` (e.g., `flags.my_flag.value?.enabled`).
+- **Usage Example**:
+    ```typescript
+    import { useFlags } from 'flagsmith-vue'
+    const flags = useFlags(['feature_one', 'feature_two'])
+    // if (flags.feature_one.value?.enabled) { /* ... */ }
+    // const value = flags.feature_two.value?.value;
+    ```
+
+</details>
+
+<details>
+<summary><code>useTraits</code></summary>
+
+Accesses specified user traits reactively.
+
+- **Parameters**:
+    - `traitsToUse: T[]` (Required): Array of trait names to retrieve.
+    - `flagsmithHelper?: FlagsmithHelper<F, T>` (Optional): `FlagsmithHelper` instance (uses global if not provided).
+- **Returns**: `Object` - Keys are trait names, values are `ComputedRef<IFlagsmithTrait | undefined>`. Access trait properties via `.value` (e.g., `traits.my_trait.value?.value`).
+- **Usage Example**:
+    ```typescript
+    import { useTraits } from 'flagsmith-vue'
+    const traits = useTraits(['user_type', 'preferred_color'])
+    // const userType = traits.user_type.value?.value;
+    ```
+
+</details>
+
+<details>
+<summary><code>useFlagsmithLoading</code></summary>
+
+Provides reactive status information about the SDK's loading and fetching states.
+
+- **Parameters**:
+    - `flagsmithHelper?: FlagsmithHelper<F, T>` (Optional): `FlagsmithHelper` instance (uses global if not provided).
+- **Returns**: `Object` - Contains `ComputedRef`s for SDK states:
+    - `error: ComputedRef<Error | null>` - Error object if an error occurred.
+    - `isFetching: ComputedRef<boolean>` - True if actively fetching.
+    - `isLoading: ComputedRef<boolean>` - True during initial load.
+    - `source: ComputedRef<FlagSource>` - Source of flag data (`'SERVER'`, `'CACHE'`, etc.).
+- **Usage Example**:
+    ```typescript
+    import { useFlagsmithLoading } from 'flagsmith-vue'
+    const { isLoading, isFetching, error, source } = useFlagsmithLoading()
+    // <div v-if="isLoading.value">Loading...</div>
+    ```
+
+</details>
+
+<details>
+<summary><code>useFlagsmithInstance</code></summary>
+
+Provides direct access to the underlying Flagsmith JavaScript SDK instance for advanced use cases.
+
+- **Parameters**:
+    - `flagsmithHelper?: FlagsmithHelper<F, T>` (Optional): `FlagsmithHelper` instance (uses global if not provided).
+- **Returns**: `IFlagsmith` - The direct Flagsmith SDK instance.
+- **Usage Example**:
+    ```typescript
+    import { useFlagsmithInstance } from 'flagsmith-vue'
+    const flagsmithInstance = useFlagsmithInstance()
+    // flagsmithInstance.identify('user_id');
+    // flagsmithInstance.setTrait('example_trait', 123);
+    ```
+    Refer to the official [Flagsmith JavaScript Client SDK documentation](https://docs.flagsmith.com/clients/javascript) for all available SDK methods.
+
+</details>
 
 ## License
 
