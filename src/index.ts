@@ -10,7 +10,7 @@ import type {
     IInitConfig,
 } from 'flagsmith/types'
 import { computed, inject, provide, ref } from 'vue'
-import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import type { App, ComputedRef, InjectionKey, Ref } from 'vue'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- typing comes from flagsmith
 type Flag = string | Record<string, any>
@@ -22,6 +22,7 @@ type UseFlagsReturn<F extends Flag> = [F] extends [string]
     : {
           [K in keyof F]: ComputedRef<IFlagsmithFeature<F[K]> | undefined>
       }
+type Options<F extends Flag = string, T extends string = string> = IInitConfig<FKey<F>, T>
 
 export interface FlagsmithHelper<F extends Flag = string, T extends string = string> {
     flags: Ref<IFlags<FKey<F>> | undefined>
@@ -44,8 +45,9 @@ const injectHelper = <F extends Flag = string, T extends string = string>(
 }
 
 export const useFlagsmith = <F extends Flag = string, T extends string = string>(
-    options: IInitConfig<FKey<F>, T>,
-    flagsmithInstance = flagsmith as unknown as IFlagsmith<F, T>
+    options: Options<F, T>,
+    flagsmithInstance = flagsmith as unknown as IFlagsmith<F, T>,
+    app?: App
 ): FlagsmithHelper<F, T> => {
     const flags = ref<IFlags<FKey<F>>>()
     const traits = ref<ITraits<T>>()
@@ -66,7 +68,11 @@ export const useFlagsmith = <F extends Flag = string, T extends string = string>
         loadingState,
         flagsmithInstance,
     }
-    provide<FlagsmithHelper<F, T>>(FlagsmithInjectionKey, helper)
+    if (app) {
+        app.provide<FlagsmithHelper<F, T>>(FlagsmithInjectionKey, helper)
+    } else {
+        provide<FlagsmithHelper<F, T>>(FlagsmithInjectionKey, helper)
+    }
 
     return helper
 }
@@ -114,4 +120,12 @@ export const useFlagsmithInstance = <F extends Flag = string, T extends string =
 ): IFlagsmith<F, T> => {
     const { flagsmithInstance } = injectHelper(flagsmithHelper)
     return flagsmithInstance
+}
+
+// Plugin install function
+export default <F extends Flag = string, T extends string = string>(
+    app: App,
+    options: Options<F, T>
+) => {
+    useFlagsmith(options, flagsmith as unknown as IFlagsmith<F, T>, app)
 }

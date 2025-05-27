@@ -6,6 +6,7 @@ import {
     useFlagsmithLoading,
     useTraits,
 } from '../src/index'
+import flagsmithVue from '../src/index'
 import { mount } from '@vue/test-utils'
 import flagsmith from 'flagsmith'
 import type { IFlagsmithFeature } from 'flagsmith/types'
@@ -61,19 +62,43 @@ const isVisibleFeatureMock: IFlagsmithFeature<boolean> = {
     value: true,
 }
 
-const ParentComponent = defineComponent({
+const parentComponent = {
     template: `<main><child-component /></main>`,
     components: { ChildComponent },
+}
+const parentComponentWithSetup = {
+    ...parentComponent,
     setup() {
         useFlagsmith({
             environmentID: '',
         })
     },
-})
+}
+const createParentComponent = (omitSetupFunction = false) =>
+    defineComponent(omitSetupFunction ? parentComponent : parentComponentWithSetup)
 
-const mountParentComponent = () => mount(ParentComponent)
+const mountParentComponent = (usePlugin = false) =>
+    mount(createParentComponent(usePlugin), {
+        global: {
+            plugins: usePlugin ? [flagsmithVue] : [],
+        },
+    })
 
 describe('flagsmith-vue', () => {
+    describe('Use as plugin', () => {
+        it('should show the child component when feature flag is set to true', async () => {
+            jest.mocked(flagsmith.getAllFlags).mockImplementation(() => ({
+                is_visible: isVisibleFeatureMock,
+            }))
+            const wrapper = mountParentComponent(true)
+
+            flagsmith._trigger!()
+            await nextTick()
+
+            expect(() => wrapper.get('.child-component--feature')).not.toThrow()
+        })
+    })
+
     describe('Flags', () => {
         it('should show the child component when feature flag is set to true', async () => {
             jest.mocked(flagsmith.getAllFlags).mockImplementation(() => ({
