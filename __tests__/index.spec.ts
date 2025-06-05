@@ -77,34 +77,22 @@ const parentComponentWithSetup = {
 const createParentComponent = (omitSetupFunction = false) =>
     defineComponent(omitSetupFunction ? parentComponent : parentComponentWithSetup)
 
-const mountParentComponent = (usePlugin = false) =>
+const mountParentComponent = (usePlugin: boolean) =>
     mount(createParentComponent(usePlugin), {
         global: {
             plugins: usePlugin ? [flagsmithVue] : [],
         },
     })
 
-describe('flagsmith-vue', () => {
-    describe('Use as plugin', () => {
-        it('should show the child component when feature flag is set to true', async () => {
-            jest.mocked(flagsmith.getAllFlags).mockImplementation(() => ({
-                is_visible: isVisibleFeatureMock,
-            }))
-            const wrapper = mountParentComponent(true)
-
-            flagsmith._trigger!()
-            await nextTick()
-
-            expect(() => wrapper.get('.child-component--feature')).not.toThrow()
-        })
-    })
+describe.each(['plugin', 'composition'])(`flagsmith-vue - using init type: %s`, (initType) => {
+    const usePlugin = initType === 'plugin'
 
     describe('Flags', () => {
         it('should show the child component when feature flag is set to true', async () => {
             jest.mocked(flagsmith.getAllFlags).mockImplementation(() => ({
                 is_visible: isVisibleFeatureMock,
             }))
-            const wrapper = mountParentComponent()
+            const wrapper = mountParentComponent(usePlugin)
 
             flagsmith._trigger!()
             await nextTick()
@@ -119,7 +107,7 @@ describe('flagsmith-vue', () => {
                     value: false,
                 },
             }))
-            const wrapper = mountParentComponent()
+            const wrapper = mountParentComponent(usePlugin)
 
             flagsmith._trigger!()
             await nextTick()
@@ -133,7 +121,7 @@ describe('flagsmith-vue', () => {
             jest.mocked(flagsmith.getAllTraits).mockImplementation(() => ({
                 test_trait: 'test-trait',
             }))
-            const wrapper = mountParentComponent()
+            const wrapper = mountParentComponent(usePlugin)
 
             flagsmith._trigger!()
             await nextTick()
@@ -143,7 +131,7 @@ describe('flagsmith-vue', () => {
 
         it('should not display the trait attribute when the trait is not set', async () => {
             jest.mocked(flagsmith.getAllTraits).mockImplementation(() => ({}))
-            const wrapper = mountParentComponent()
+            const wrapper = mountParentComponent(usePlugin)
 
             flagsmith._trigger!()
             await nextTick()
@@ -161,7 +149,7 @@ describe('flagsmith-vue', () => {
         describe('error', () => {
             it('should display the error element when there is a flagsmith error', async () => {
                 flagsmith.loadingState!.error = new Error('Test error')
-                const wrapper = mountParentComponent()
+                const wrapper = mountParentComponent(usePlugin)
 
                 flagsmith._triggerLoadingState!()
                 await nextTick()
@@ -170,7 +158,7 @@ describe('flagsmith-vue', () => {
             })
 
             it('should not display the error element when there is no flagsmith error', async () => {
-                const wrapper = mountParentComponent()
+                const wrapper = mountParentComponent(usePlugin)
 
                 flagsmith._triggerLoadingState!()
                 await nextTick()
@@ -182,7 +170,7 @@ describe('flagsmith-vue', () => {
         describe('isFetching', () => {
             it('should display the fetching element when flagsmith is fetching', async () => {
                 flagsmith.loadingState!.isFetching = true
-                const wrapper = mountParentComponent()
+                const wrapper = mountParentComponent(usePlugin)
 
                 flagsmith._triggerLoadingState!()
                 await nextTick()
@@ -192,7 +180,7 @@ describe('flagsmith-vue', () => {
 
             it('should not display the fetching element when flagsmith is not fetching', async () => {
                 flagsmith.loadingState!.isFetching = false
-                const wrapper = mountParentComponent()
+                const wrapper = mountParentComponent(usePlugin)
 
                 flagsmith._triggerLoadingState!()
                 await nextTick()
@@ -204,7 +192,7 @@ describe('flagsmith-vue', () => {
         describe('isLoading', () => {
             it('should display the loading element when flagsmith is loading', async () => {
                 flagsmith.loadingState!.isLoading = true
-                const wrapper = mountParentComponent()
+                const wrapper = mountParentComponent(usePlugin)
 
                 flagsmith._triggerLoadingState!()
                 await nextTick()
@@ -214,7 +202,7 @@ describe('flagsmith-vue', () => {
 
             it('should not display the loading element when flagsmith is not loading', async () => {
                 flagsmith.loadingState!.isLoading = false
-                const wrapper = mountParentComponent()
+                const wrapper = mountParentComponent(usePlugin)
 
                 flagsmith._triggerLoadingState!()
                 await nextTick()
@@ -226,7 +214,7 @@ describe('flagsmith-vue', () => {
         describe('Loading source', () => {
             it('should display the loading source when flagsmith is loading', async () => {
                 flagsmith.loadingState!.isLoading = true
-                const wrapper = mountParentComponent()
+                const wrapper = mountParentComponent(usePlugin)
 
                 flagsmith._triggerLoadingState!()
                 await nextTick()
@@ -241,7 +229,7 @@ describe('flagsmith-vue', () => {
 
     describe('Instance', () => {
         it('should display the instance state', async () => {
-            const wrapper = mountParentComponent()
+            const wrapper = mountParentComponent(usePlugin)
 
             flagsmith._triggerLoadingState!()
             await nextTick()
