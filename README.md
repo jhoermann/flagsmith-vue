@@ -23,9 +23,37 @@ npm install flagsmith-vue flagsmith
 
 ## Usage
 
-**Step 1: Initialize Flagsmith (`useFlagsmith`)**
+The recommended way to initialize Flagsmith is by installing it as a Vue plugin, which makes it available throughout your application. Alternatively, for more localized use within specific component trees, you can use the `useFlagsmith` composable.
 
-In your main app component (e.g., `App.vue`), initialize Flagsmith. Replace `YOUR_ENVIRONMENT_ID` with your actual ID. For more init options, see [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
+**Recommended: Initialize by Installing as a Vue Plugin**
+
+You can install `flagsmith-vue` as a Vue plugin. This is the preferred method for most applications as it simplifies setup and provides application-wide access to Flagsmith.
+
+**Step 1: Install the Plugin**
+
+In your main application file (e.g., `main.ts` or `main.js`), import and use the plugin. Replace `YOUR_ENVIRONMENT_ID` with your actual ID. For more init options, see [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
+
+```typescript
+// main.ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import flagsmithPlugin from 'flagsmith-vue' // Import the default export
+
+const app = createApp(App)
+
+app.use(flagsmithPlugin, {
+  environmentID: 'YOUR_ENVIRONMENT_ID'
+  // Add any other Flagsmith initialization options here
+})
+
+app.mount('#app')
+```
+
+**Alternative: Initialize with `useFlagsmith` (Composition API)**
+
+This method is suitable if you only need Flagsmith functionality within a specific part of your application (e.g., a single component tree) rather than globally.
+
+In your main app component for that specific tree (e.g., `App.vue` or a specific feature component), initialize Flagsmith. Replace `YOUR_ENVIRONMENT_ID` with your actual ID. For more init options, see [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
 
 ```typescript
 // App.vue (using <script setup>) or main.ts
@@ -34,9 +62,13 @@ import { useFlagsmith } from 'flagsmith-vue'
 useFlagsmith({ environmentID: 'YOUR_ENVIRONMENT_ID' })
 ```
 
-**Step 2: Access Feature Flags (`useFlags`)**
+**Accessing Flags and Traits in Components**
 
-In any child component, use `useFlags` to get your flags. Access `yourFlag.value?.enabled` for enabled status and `yourFlag.value?.value` for the flag's value.
+Regardless of the initialization method chosen, you can access flags and traits in any child component within the scope of the initialized Flagsmith instance.
+
+When Flagsmith is initialized as a plugin (the recommended method), the composable functions (`useFlags`, `useTraits`, `useFlagsmithLoading`, and `useFlagsmithInstance`) will automatically use the globally installed Flagsmith instance. If using the `useFlagsmith` composable for initialization, these functions will use the instance provided by that specific `useFlagsmith` call (you might need to pass the `flagsmithHelper` explicitly if using multiple instances, see API reference).
+
+For flags, use `useFlags` to get the desired flags. Access `yourFlag.value?.enabled` for enabled status and `yourFlag.value?.value` for the flag's value. Similarly, `useTraits` can be used for accessing user traits.
 
 ```typescript
 // MyComponent.vue (using <script setup>)
