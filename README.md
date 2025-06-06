@@ -25,6 +25,8 @@ npm install flagsmith-vue flagsmith
 
 The recommended way to initialize Flagsmith is by installing it as a Vue plugin, which makes it available throughout your application. Alternatively, for more localized use within specific component trees, you can use the `useFlagsmith` composable.
 
+### Step 1: Initialize Flagsmith
+
 **Recommended: Initialize by Installing as a Vue Plugin**
 
 In your main application file (e.g., `main.ts` or `main.js`), import and use the plugin. Replace `YOUR_ENVIRONMENT_ID` with your actual ID. For more init options, see [Flagsmith initialization options](https://docs.flagsmith.com/clients/javascript#initialisation-options).
@@ -58,7 +60,7 @@ import { useFlagsmith } from 'flagsmith-vue'
 useFlagsmith({ environmentID: 'YOUR_ENVIRONMENT_ID' })
 ```
 
-**Accessing Flags and Traits in Components**
+### Step 2: Accessing Flags and Traits in Components
 
 Regardless of the initialization method chosen, you can access flags and traits in any child component within the scope of the initialized Flagsmith instance.
 
