@@ -1,6 +1,6 @@
 {
     "name": "flagsmith-vue",
-    "version": "2.4.2",
+    "version": "2.5.0",
     "description": "Flagsmith Vue.js integration",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",

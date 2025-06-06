@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.4.2...v2.5.0) (2025-06-06)
+
+
+### Features
+
+* use as vue plugin ([cfe7214](https://github.com/jhoermann/flagsmith-vue/commit/cfe721447ae01bee9e59d81bde95f6e547c72498))
+
 ## [2.4.2](https://github.com/jhoermann/flagsmith-vue/compare/v2.4.1...v2.4.2) (2025-05-22)
 
 
