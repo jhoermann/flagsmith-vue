@@ -40,7 +40,7 @@
     },
     "homepage": "https://github.com/jhoermann/flagsmith-vue#readme",
     "devDependencies": {
-        "@commitlint/config-conventional": "^19.8.1",
+        "@commitlint/config-conventional": "^20.0.0",
         "@tsconfig/strictest": "^2.0.6",
         "@types/jest": "^30.0.0",
         "@vue/test-utils": "^2.4.6",
