@@ -48,7 +48,7 @@
         "expect-type": "^1.2.2",
         "flagsmith": "^9.3.2",
         "husky": "^9.1.7",
-        "jest": "^30.1.3",
+        "jest": "^30.2.0",
         "jest-environment-jsdom": "^30.1.2",
         "lint-staged": "^16.2.1",
         "prettier": "3.6.2",
