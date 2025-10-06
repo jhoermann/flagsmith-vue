@@ -44,7 +44,7 @@
         "@tsconfig/strictest": "^2.0.6",
         "@types/jest": "^30.0.0",
         "@vue/test-utils": "^2.4.6",
-        "eslint": "^9.36.0",
+        "eslint": "^9.37.0",
         "expect-type": "^1.2.2",
         "flagsmith": "^9.3.2",
         "husky": "^9.1.7",
