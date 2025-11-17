@@ -1,11 +1,10 @@
-import flagsmith from 'flagsmith'
+import flagsmith, { FlagSource } from 'flagsmith'
 import type {
     IFlags,
     IFlagsmithFeature,
     IFlagsmithTrait,
     ITraits,
     LoadingState,
-    FlagSource,
     IFlagsmith,
     IInitConfig,
 } from 'flagsmith/types'
@@ -111,7 +110,9 @@ export const useFlagsmithLoading = <F extends Flag = string, T extends string = 
         error: computed(() => loadingState.value?.error ?? null),
         isFetching: computed(() => Boolean(loadingState.value?.isFetching)),
         isLoading: computed(() => Boolean(loadingState.value?.isLoading)),
-        source: computed(() => loadingState.value?.source ?? ('NONE' as FlagSource)),
+        source: computed(
+            () => (loadingState.value?.source as FlagSource | undefined) ?? FlagSource.NONE
+        ),
     }
 }
 
