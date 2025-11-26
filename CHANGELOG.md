@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.5.0...v2.6.0) (2025-11-26)
+
+
+### Features
+
+* use flagsource enum from flagsmith ([3d85067](https://github.com/jhoermann/flagsmith-vue/commit/3d85067acd1acc8fd84961b2bb328f927b54aa7a))
+
 ## [2.5.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.4.2...v2.5.0) (2025-06-06)
 
 
