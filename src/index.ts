@@ -110,9 +110,7 @@ export const useFlagsmithLoading = <F extends Flag = string, T extends string = 
         error: computed(() => loadingState.value?.error ?? null),
         isFetching: computed(() => Boolean(loadingState.value?.isFetching)),
         isLoading: computed(() => Boolean(loadingState.value?.isLoading)),
-        source: computed(
-            () => (loadingState.value?.source as FlagSource | undefined) ?? FlagSource.NONE
-        ),
+        source: computed(() => loadingState.value?.source ?? FlagSource.NONE),
     }
 }
 
