@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.6.0...v2.7.0) (2025-12-19)
+
+
+### Features
+
+* **deps:** update flagsmith to v10 ([6930f57](https://github.com/jhoermann/flagsmith-vue/commit/6930f574a374d7cf9eb8f68b5bdf215a2635cc11))
+
 ## [2.6.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.5.0...v2.6.0) (2025-11-26)
 
 
