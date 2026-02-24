@@ -8,10 +8,10 @@ import {
 } from '../src/index'
 import flagsmithVue from '../src/index'
 import { mount } from '@vue/test-utils'
-import flagsmith from 'flagsmith'
-import type { IFlagsmithFeature } from 'flagsmith/types'
+import flagsmith from '@flagsmith/flagsmith'
+import type { IFlagsmithFeature } from '@flagsmith/flagsmith/types'
 
-jest.mock('flagsmith')
+jest.mock('@flagsmith/flagsmith')
 jest.mocked(flagsmith.getState).mockReturnValue({
     api: 'mock-api',
 })

@@ -18,7 +18,7 @@
 ## Installation
 
 ```bash
-npm install flagsmith-vue flagsmith
+npm install flagsmith-vue @flagsmith/flagsmith
 ```
 
 ## Usage
