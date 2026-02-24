@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { useFlags } from '../src'
-import flagsmith, { IFlags, IFlagsmithFeature, ITraits } from 'flagsmith'
+import flagsmith, { IFlags, IFlagsmithFeature, ITraits } from '@flagsmith/flagsmith'
 import { expectTypeOf } from 'expect-type'
 
 // test: should not set a specific flag value type when flag is a string

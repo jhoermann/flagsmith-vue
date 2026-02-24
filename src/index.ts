@@ -1,4 +1,4 @@
-import flagsmith, { FlagSource } from 'flagsmith'
+import flagsmith, { FlagSource } from '@flagsmith/flagsmith'
 import type {
     IFlags,
     IFlagsmithFeature,
@@ -7,7 +7,7 @@ import type {
     LoadingState,
     IFlagsmith,
     IInitConfig,
-} from 'flagsmith/types'
+} from '@flagsmith/flagsmith/types'
 import { computed, inject, provide, ref } from 'vue'
 import type { App, ComputedRef, InjectionKey, Ref } from 'vue'
 
