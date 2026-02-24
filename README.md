@@ -182,4 +182,4 @@ Provides direct access to the underlying Flagsmith JavaScript SDK instance for a
 ## License
 
 Unless otherwise noted, all source code is licensed under the MIT License.  
-Copyright (c) 2025 Jochen Hörmann
+Copyright (c) 2024 - today Jochen Hörmann
