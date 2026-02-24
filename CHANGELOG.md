@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.7.0...v3.0.0) (2026-02-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* The peer dependency changed from `flagsmith` to `@flagsmith/flagsmith`. Users must uninstall `flagsmith` and install `@flagsmith/flagsmith@^11` instead.
+
+### Features
+
+* replace deprecated flagsmith with @flagsmith/flagsmith scoped package ([2df2a64](https://github.com/jhoermann/flagsmith-vue/commit/2df2a64f1ba3f138a56c1ea01588539c4e749bf8)), closes [#429](https://github.com/jhoermann/flagsmith-vue/issues/429)
+
 ## [2.7.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.6.0...v2.7.0) (2025-12-19)
 
 
