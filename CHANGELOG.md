@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/jhoermann/flagsmith-vue/compare/v3.0.0...v3.1.0) (2026-05-04)
+
+
+### Features
+
+* **deps:** update flagsmith to version 12 ([7267276](https://github.com/jhoermann/flagsmith-vue/commit/7267276b7b177d12ddc13ae932015385b403216d))
+
 ## [3.0.0](https://github.com/jhoermann/flagsmith-vue/compare/v2.7.0...v3.0.0) (2026-02-24)
 
 
