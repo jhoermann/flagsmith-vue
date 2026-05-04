@@ -3,7 +3,10 @@
     "extends": "@tsconfig/strictest/tsconfig.json",
     "compilerOptions": {
         "target": "es2016",
+        "lib": ["es2019", "dom"],
         "moduleResolution": "node",
+        "ignoreDeprecations": "6.0",
+        "types": ["jest", "node"],
         "esModuleInterop": true,
         "strict": true,
         "forceConsistentCasingInFileNames": true,
