@@ -58,7 +58,7 @@
         "ts-node": "10.9.2",
         "typescript": "6.0.3",
         "typescript-eslint": "8.59.2",
-        "vue": "3.5.33"
+        "vue": "3.5.34"
     },
     "peerDependencies": {
         "@flagsmith/flagsmith": "^11 || ^12",
