@@ -45,7 +45,7 @@
         "@flagsmith/flagsmith": "12.1.2",
         "@tsconfig/strictest": "2.0.8",
         "@types/jest": "30.0.0",
-        "@vue/test-utils": "2.4.11",
+        "@vue/test-utils": "2.5.0",
         "eslint": "10.9.1",
         "expect-type": "1.4.0",
         "husky": "9.1.7",
