@@ -52,7 +52,7 @@
         "jest": "30.5.1",
         "jest-environment-jsdom": "30.5.1",
         "lint-staged": "17.5.1",
-        "prettier": "3.9.6",
+        "prettier": "3.9.8",
         "terser": "5.51.2",
         "ts-jest": "29.4.12",
         "ts-node": "10.9.2",
